@@ -4,17 +4,17 @@ import React from 'react';
 const ValuationTool = () => {
   return (
     <>
-    <section className="mt-20">
+    <section className="mt-10">
     <div className="mx-auto max-w-screen-xl px-4 lg:flex lg:items-center">
       <div
         className="mx-auto max-w-xl text-center"
         
       >
-        <h1 className="text-base  sm:text-3xl">
-          <strong className=" text-black sm:block">
+        <div className="text-xl font-extrabold lg:text-3xl">
+          
           How does the valuation tool work?
-          </strong>
-        </h1>
+         
+        </div>
       </div>
     </div>
   </section>
