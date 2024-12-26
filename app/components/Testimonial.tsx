@@ -2,10 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 
 const testimonialImages = [
-  '/images/TM.png',
-  '/images/TM.png',
-  '/images/TM.png',
-  '/images/TM.png',
+  '/images/TM1.png',
+  '/images/TM2.svg',
+  '/images/TM3.png',
+  '/images/TM4.png',
 ];
 
 const Testimonial = () => {
