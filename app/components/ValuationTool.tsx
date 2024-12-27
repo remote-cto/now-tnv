@@ -6,8 +6,8 @@ const ValuationTool = () => {
     <>
       <section className="mt-10">
         <div className="mx-auto max-w-screen-xl px-4 text-center">
-          <h2 className="text-2xl font-extrabold text-black sm:text-4xl">
-            How does the valuation tool work?
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            How does the Valuation Tool work?
           </h2>
         </div>
       </section>
