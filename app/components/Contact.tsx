@@ -57,7 +57,7 @@ const Contact = () => {
                 onClick={handleStartValuation}
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 mb-4"
               >
-                START YOUR VALUATION
+                Start your Valuation
               </button>
               <a
                 href="#"
