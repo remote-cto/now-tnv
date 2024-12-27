@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import Header from '../components/Header';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import {
   TextField,
   Button,
@@ -9,9 +9,13 @@ import {
   Typography,
   Snackbar,
   Alert,
+  IconButton,
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Header from '../components/Header';
 
 const Page: React.FC = () => {
+  const router = useRouter(); // Initialize the router
   const [answers, setAnswers] = useState<string[]>(Array(10).fill(''));
   const [showAlert, setShowAlert] = useState(false);
 
@@ -43,11 +47,35 @@ const Page: React.FC = () => {
     setShowAlert(false);
   };
 
-  return (
-    <div style={{ backgroundColor: '#f9fafb', minHeight: '100vh' }}>
-      <Header />
+  const handleBack = () => {
+    router.back(); 
+  };
 
+  return (
+    <>
+    <Header/>
+    <div style={{ backgroundColor: '#f9fafb', minHeight: '100vh' }}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Back Button */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+          <IconButton
+            onClick={handleBack}
+            sx={{
+              color: '#1976d2',
+              backgroundColor: '#e3f2fd',
+              '&:hover': {
+                backgroundColor: '#bbdefb',
+              },
+              marginRight: '1rem',
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
+            Back 
+          </Typography>
+        </div>
+
         <Typography
           variant="h2"
           align="center"
@@ -155,6 +183,8 @@ const Page: React.FC = () => {
         </Snackbar>
       </Container>
     </div>
+    </>
+
   );
 };
 
