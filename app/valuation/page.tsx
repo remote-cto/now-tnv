@@ -14,11 +14,41 @@ import {
   InputLabel,
   List,
   ListItem,
-  Box
+  Box,
+  SelectChangeEvent
 } from '@mui/material';
 
-const BusinessValuationForm = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  annual_revenue: string;
+  net_income: string;
+  industry: string;
+  assets: string;
+  liabilities: string;
+  years_in_operation: string;
+  customers_last_month: string;
+  employees: string;
+  social_media_followers: string;
+  revenue_trend: string;
+}
+
+interface ValuationBreakdown {
+  coreValue: number;
+  assetValue: number;
+  socialMediaValue: number;
+  adjustments: {
+    industry: number;
+    stability: number;
+    growth: number;
+  };
+}
+
+interface Valuation {
+  total: number;
+  breakdown: ValuationBreakdown;
+}
+
+const BusinessValuationForm: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     annual_revenue: '',
     net_income: '',
     industry: '',
@@ -31,7 +61,7 @@ const BusinessValuationForm = () => {
     revenue_trend: ''
   });
 
-  const [valuation, setValuation] = useState(null);
+  const [valuation, setValuation] = useState<Valuation | null>(null);
 
   const industryOptions = [
     'Retail',
@@ -40,7 +70,7 @@ const BusinessValuationForm = () => {
     'Tech',
     'Food & Beverage',
     'Other'
-  ];
+  ] as const;
 
   const yearsOptions = [
     'Less than 1 year',
@@ -48,7 +78,7 @@ const BusinessValuationForm = () => {
     '3–5 years',
     '5–10 years',
     '10+ years'
-  ];
+  ] as const;
 
   const employeeOptions = [
     'None',
@@ -56,16 +86,20 @@ const BusinessValuationForm = () => {
     '6–10',
     '11–50',
     '51+'
-  ];
+  ] as const;
 
   const revenueOptions = [
     'Growing',
     'Stable',
     'Declining'
-  ];
+  ] as const;
 
-  const getIndustryMultiple = (industry) => {
-    const multiples = {
+  type Industry = typeof industryOptions[number];
+  type Years = typeof yearsOptions[number];
+  type RevenueTrend = typeof revenueOptions[number];
+
+  const getIndustryMultiple = (industry: Industry): number => {
+    const multiples: Record<Industry, number> = {
       'Retail': 1.5,
       'Service': 2.0,
       'Manufacturing': 2.5,
@@ -76,8 +110,8 @@ const BusinessValuationForm = () => {
     return multiples[industry] || 1.5;
   };
 
-  const getStabilityMultiplier = (years) => {
-    const multipliers = {
+  const getStabilityMultiplier = (years: Years): number => {
+    const multipliers: Record<Years, number> = {
       'Less than 1 year': 0.9,
       '1–3 years': 1.0,
       '3–5 years': 1.05,
@@ -87,8 +121,8 @@ const BusinessValuationForm = () => {
     return multipliers[years] || 1.0;
   };
 
-  const getGrowthMultiplier = (trend) => {
-    const multipliers = {
+  const getGrowthMultiplier = (trend: RevenueTrend): number => {
+    const multipliers: Record<RevenueTrend, number> = {
       'Growing': 1.1,
       'Stable': 1.0,
       'Declining': 0.9
@@ -103,9 +137,9 @@ const BusinessValuationForm = () => {
     const liabilities = Number(formData.liabilities) || 0;
     const followers = Number(formData.social_media_followers) || 0;
 
-    const industryMultiple = getIndustryMultiple(formData.industry);
-    const stabilityMultiplier = getStabilityMultiplier(formData.years_in_operation);
-    const growthMultiplier = getGrowthMultiplier(formData.revenue_trend);
+    const industryMultiple = getIndustryMultiple(formData.industry as Industry);
+    const stabilityMultiplier = getStabilityMultiplier(formData.years_in_operation as Years);
+    const growthMultiplier = getGrowthMultiplier(formData.revenue_trend as RevenueTrend);
 
     const coreValue = netIncome * industryMultiple;
     const assetValue = assets - liabilities;
@@ -130,11 +164,19 @@ const BusinessValuationForm = () => {
     });
   };
 
-  const handleInputChange = (e) => {
+  const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<string>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name as keyof FormData]: value
     }));
   };
 
@@ -152,7 +194,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="annual_revenue"
             value={formData.annual_revenue}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Total income before expenses"
           />
 
@@ -162,7 +204,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="net_income"
             value={formData.net_income}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Typically 10-15% of revenue"
           />
 
@@ -171,7 +213,7 @@ const BusinessValuationForm = () => {
             <Select
               name="industry"
               value={formData.industry}
-              onChange={handleInputChange}
+              onChange={handleSelectChange}
               label="Industry"
             >
               {industryOptions.map(option => (
@@ -186,7 +228,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="assets"
             value={formData.assets}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Inventory, equipment, etc."
           />
 
@@ -196,7 +238,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="liabilities"
             value={formData.liabilities}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Loans, debts"
           />
 
@@ -205,7 +247,7 @@ const BusinessValuationForm = () => {
             <Select
               name="years_in_operation"
               value={formData.years_in_operation}
-              onChange={handleInputChange}
+              onChange={handleSelectChange}
               label="Years in Operation"
             >
               {yearsOptions.map(option => (
@@ -220,7 +262,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="customers_last_month"
             value={formData.customers_last_month}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Last month"
           />
 
@@ -229,7 +271,7 @@ const BusinessValuationForm = () => {
             <Select
               name="employees"
               value={formData.employees}
-              onChange={handleInputChange}
+              onChange={handleSelectChange}
               label="Employees"
             >
               {employeeOptions.map(option => (
@@ -244,7 +286,7 @@ const BusinessValuationForm = () => {
             type="number"
             name="social_media_followers"
             value={formData.social_media_followers}
-            onChange={handleInputChange}
+            onChange={handleTextFieldChange}
             helperText="Most active platform"
           />
 
@@ -253,7 +295,7 @@ const BusinessValuationForm = () => {
             <Select
               name="revenue_trend"
               value={formData.revenue_trend}
-              onChange={handleInputChange}
+              onChange={handleSelectChange}
               label="Revenue Trend"
             >
               {revenueOptions.map(option => (
