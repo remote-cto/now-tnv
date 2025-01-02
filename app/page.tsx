@@ -4,6 +4,7 @@ import ValuationTool from "./components/ValuationTool";
 import Contact from "./components/Contact";
 import Testimonial from "./components/Testimonial";
 import ScrollToTop from "./components/ScrollToTop"; 
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <ValuationTool />
       <Testimonial />
       <Contact />
+      <Footer/>
       <ScrollToTop /> 
     </div>
   );
