@@ -5,7 +5,7 @@ import React from "react";
 const ValuationTool = () => {
   return (
     <div className="bg-gray-900">
-      <section className="mt-10">
+      <section className="mt-5">
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
