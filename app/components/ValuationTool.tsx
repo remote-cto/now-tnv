@@ -34,7 +34,7 @@ const ValuationTool = () => {
               
               {/* Three Circles */}
               <div className="flex gap-4 mt-6">
-                <div className="w-4 h-4 rounded-full bg-gray-500"></div>
+              <div className="w-4 h-4 rounded-full bg-gray-500"></div>
                 <div className="w-4 h-4 rounded-full bg-gray-500"></div>
                 <div className="w-4 h-4 rounded-full bg-gray-500"></div>
               </div>

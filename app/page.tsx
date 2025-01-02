@@ -5,12 +5,14 @@ import Contact from "./components/Contact";
 import Testimonial from "./components/Testimonial";
 import ScrollToTop from "./components/ScrollToTop"; 
 import Footer from "./components/Footer";
+import WorkingValuationTool from "./components/WorkingValuationTool";
 
 export default function Home() {
   return (
     <div>
       <Header />
       <ValuationTool />
+      <WorkingValuationTool/>
       <Testimonial />
       <Contact />
       <Footer/>
