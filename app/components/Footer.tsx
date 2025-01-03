@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="w-full py-4 px-6 flex justify-between items-center border-t border-gray-200 mb-1">
-      <div className="text-xl font-bold">
+      <div className=" text-lg lg:text-4xl font-extrabold">
         The.Now.Company.
       </div>
       

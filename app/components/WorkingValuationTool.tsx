@@ -10,8 +10,8 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header Section */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-2">HOW DOES THE VALUATION TOOL WORK?</h1>
-        <p className="text-gray-600">We provide them with more choice and absolute transparency.</p>
+        <h1 className="text-xl lg:text-4xl font-extrabold mb-2">HOW DOES THE VALUATION TOOL WORK?</h1>
+        <p className="text-gray-600 text-xl">We provide them with more choice and absolute transparency.</p>
       </div>
 
       {/* Features Grid */}
