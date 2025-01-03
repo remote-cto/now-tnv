@@ -11,7 +11,7 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
       {/* Header Section */}
       <div className="text-center mb-12">
         <h1 className="text-xl lg:text-4xl font-extrabold mb-2">HOW DOES THE VALUATION TOOL WORK?</h1>
-        <p className="text-gray-600 text-xl">We provide them with more choice and absolute transparency.</p>
+        <p className="text-gray-800 text-xl">We provide them with more choice and absolute transparency.</p>
       </div>
 
       {/* Features Grid */}
@@ -28,9 +28,9 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-3">Start with some key details</h2>
-            <p className="text-gray-700 mb-2">TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.</p>
-            <p className="text-gray-700">We also consider how many buyers are interested in sites like yours.</p>
+            <h2 className=" text-xl lg:text-3xl font-extrabold mb-3">Start with some key details</h2>
+            <p className="text-gray-700 mb-2 text-lg">TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.</p>
+            <p className="text-gray-700 text-lg">We also consider how many buyers are interested in sites like yours.</p>
           </div>
         </div>
 
@@ -46,9 +46,9 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-3">Accurate & instant valuation</h2>
-            <p className="text-gray-700 mb-2">TNV has more historical sales data than anyone else. If the information you provide is accurate, your Flippa valuation will be a good indicator of price.</p>
-            <p className="text-gray-700">No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation.</p>
+            <h2 className="text-xl lg:text-3xl font-extrabold mb-3">Accurate & instant valuation</h2>
+            <p className="text-gray-700 mb-2 text-lg">TNV has more historical sales data than anyone else. If the information you provide is accurate, your Flippa valuation will be a good indicator of price.</p>
+            <p className="text-gray-700 text-lg">No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation.</p>
           </div>
         </div>
 
@@ -64,9 +64,9 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-3">Supporting you, all the way</h2>
-            <p className="text-gray-700 mb-2">Based on the information you have provided, we'll give you a view of the platform and how it works. You can then choose to sell privately or publicly on the marketplace.</p>
-            <p className="text-gray-700">Platform fees start from USD$39.</p>
+            <h2 className="text-xl lg:text-3xl font-extrabold mb-3">Supporting you, all the way</h2>
+            <p className="text-gray-700 mb-2 text-lg">Based on the information you have provided, we'll give you a view of the platform and how it works. You can then choose to sell privately or publicly on the marketplace.</p>
+            <p className="text-gray-700 text-lg">Platform fees start from USD$39.</p>
           </div>
         </div>
 
@@ -82,8 +82,8 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-3">Trust & Safety by Design</h2>
-            <p className="text-gray-700">Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.</p>
+            <h2 className="text-xl lg:text-3xl font-extrabold mb-3">Trust & Safety by Design</h2>
+            <p className="text-gray-700 text-lg">Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.</p>
           </div>
         </div>
       </div>
