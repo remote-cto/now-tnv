@@ -90,7 +90,7 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
       </div>
 
       {/* CTA Button */}
-      <div className="text-center mt-12">
+      <div className="mt-12">
       <Link href="/valuation">
               <button className="bg-black text-white px-7 py-3 rounded-full font-extrabold hover:bg-black transition-colors text-2xl">
                 Get a Free Valuation
@@ -99,10 +99,10 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
       </div>
 
       {/* Dots */}
-      <div className="flex justify-center gap-2 mt-8">
-        <div className="w-4 h-4 rounded-full bg-gray-400"></div>
-        <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-        <div className="w-4 h-4 rounded-full bg-gray-300"></div>
+      <div className="flex gap-2 mt-8">
+        <div className="w-6 h-6 rounded-full bg-gray-500"></div>
+        <div className="w-6 h-6 rounded-full bg-gray-400"></div>
+        <div className="w-6 h-6 rounded-full bg-gray-300"></div>
       </div>
     </div>
   );
