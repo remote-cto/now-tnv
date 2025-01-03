@@ -24,19 +24,18 @@ const ValuationTool = () => {
               We also consider how many buyers are interested in sites like
               yours.
             </p>
-            <div className="mt-8 flex flex-col items-center lg:items-start">
-              <Link
-                href="/valuation"
-                className="block w-full rounded bg-white px-12 py-3 text-xl text-gray-950 font-bold sm:w-auto"
-              >
+            <div>
+              <Link href="/valuation">
+              <button className="bg-white text-black px-7 py-3 rounded-full font-extrabold hover:bg-white transition-colors text-2xl">
                 Get a Free Valuation
+              </button>
               </Link>
-              
-              {/* Three Circles */}
-              <div className="flex gap-4 mt-6">
-              <div className="w-4 h-4 rounded-full bg-gray-500"></div>
-                <div className="w-4 h-4 rounded-full bg-gray-500"></div>
-                <div className="w-4 h-4 rounded-full bg-gray-500"></div>
+
+              {/* Dots moved here with adjusted margin */}
+              <div className="flex justify-center gap-2 mt-4">
+                <div className="w-4 h-4 rounded-full bg-gray-400"></div>
+                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
+                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
               </div>
             </div>
           </div>

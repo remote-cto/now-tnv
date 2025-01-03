@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ValuationToolProps {
   // Add props if needed
@@ -90,9 +91,11 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
 
       {/* CTA Button */}
       <div className="text-center mt-12">
-        <button className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors">
-          Get a Free Valuation
-        </button>
+      <Link href="/valuation">
+              <button className="bg-black text-white px-7 py-3 rounded-full font-extrabold hover:bg-black transition-colors text-2xl">
+                Get a Free Valuation
+              </button>
+              </Link>
       </div>
 
       {/* Dots */}
