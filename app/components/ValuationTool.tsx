@@ -4,8 +4,8 @@ import React from "react";
 
 const ValuationTool = () => {
   return (
-    <div className="bg-gray-900">
-      <section className="mt-5">
+    <div className="bg-gray-900 lg:h-[80vh] flex items-center py-8 lg:py-0">
+      <section className="w-full">
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
@@ -24,19 +24,18 @@ const ValuationTool = () => {
               We also consider how many buyers are interested in sites like
               yours.
             </p>
-            <div>
+            <div className="flex flex-col items-center lg:items-start">
               <Link href="/valuation">
-              <button className="bg-white text-black px-7 py-3 rounded-full font-extrabold hover:bg-white transition-colors text-2xl">
-                Get a Free Valuation
-              </button>
+                <button className="bg-white text-black px-7 py-3 rounded-full font-extrabold hover:bg-white transition-colors text-2xl">
+                  Get a Free Valuation
+                </button>
               </Link>
-
-              {/* Dots moved here with adjusted margin */}
-              <div className="flex justify-center gap-2 mt-4">
-                <div className="w-4 h-4 rounded-full bg-gray-400"></div>
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-              </div>
+            </div>
+            
+            <div className="flex justify-center lg:justify-start gap-2 mt-6">
+              <div className="w-4 h-4 rounded-full bg-gray-400"></div>
+              <div className="w-4 h-4 rounded-full bg-gray-300"></div>
+              <div className="w-4 h-4 rounded-full bg-gray-300"></div>
             </div>
           </div>
 
