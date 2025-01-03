@@ -33,8 +33,8 @@ const ValuationTool = () => {
             </div>
             
             <div className="flex justify-center lg:justify-start gap-2 mt-6">
+              <div className="w-4 h-4 rounded-full bg-gray-500"></div>
               <div className="w-4 h-4 rounded-full bg-gray-400"></div>
-              <div className="w-4 h-4 rounded-full bg-gray-300"></div>
               <div className="w-4 h-4 rounded-full bg-gray-300"></div>
             </div>
           </div>
