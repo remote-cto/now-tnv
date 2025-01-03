@@ -2,7 +2,7 @@ import Image from "next/image";
 import Header from "./components/Header";
 import ValuationTool from "./components/ValuationTool";
 import Contact from "./components/Contact";
-import Testimonial from "./components/Testimonial";
+// import Testimonial from "./components/Testimonial";
 import ScrollToTop from "./components/ScrollToTop"; 
 import Footer from "./components/Footer";
 import WorkingValuationTool from "./components/WorkingValuationTool";
@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
       <ValuationTool />
       <WorkingValuationTool/>
-      <Testimonial />
+      {/* <Testimonial /> */}
       <Contact />
       <Footer/>
       <ScrollToTop /> 
