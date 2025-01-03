@@ -113,7 +113,7 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
         </Link>
       </motion.div>
 
-      <div className="flex gap-2 mt-8 justify-center">
+      <div className="flex gap-2 mt-8">
         {[0, 1, 2].map((dot) => (
           <motion.div
             key={dot}

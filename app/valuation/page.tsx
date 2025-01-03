@@ -1,71 +1,185 @@
-"use client"
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, MenuItem, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+"use client";
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  TextField,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const BusinessValuationForm = () => {
   const [formData, setFormData] = useState({
-    revenue: '',
-    netIncome: '',
-    industry: '',
-    assets: '',
-    liabilities: '',
-    yearsInOperation: '',
-    monthlyCustomers: '',
-    employees: '',
-    socialFollowers: '',
-    revenueTrend: ''
+    companyName: "",
+    email: "",
+    revenue: "",
+    netIncome: "",
+    industry: "",
+    assets: "",
+    liabilities: "",
+    yearsInOperation: "",
+    monthlyCustomers: "",
+    employees: "",
+    socialFollowers: "",
+    revenueTrend: "",
   });
 
-  const handleInputChange = (field: keyof typeof formData, value: string | number) => {
-    setFormData(prev => ({
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const industries = ['Retail', 'Service', 'Manufacturing', 'Tech', 'Food & Beverage', 'Other'];
-  const yearsOptions = ['Less than 1 year', '1–3 years', '3–5 years', '5–10 years', '10+ years'];
-  const employeeOptions = ['None', '1–5', '6–10', '11–50', '51+'];
-  const trendOptions = ['Growing', 'Stable', 'Declining'];
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const apiData = {
+        annual_revenue: parseFloat(formData.revenue) || 0,
+        net_income: formData.netIncome ? parseFloat(formData.netIncome) : null,
+        industry: formData.industry || "other",
+        assets: parseFloat(formData.assets) || 0,
+        liabilities: parseFloat(formData.liabilities) || 0,
+        years_in_operation: formData.yearsInOperation || "less than 1 year",
+        customers_last_month: parseInt(formData.monthlyCustomers) || 0,
+        employees: formData.employees || "none",
+        social_media_followers: parseInt(formData.socialFollowers) || 0,
+        revenue_trend: formData.revenueTrend || "stable",
+      };
+
+      const response = await fetch("/api/calculatevaluation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n" +
+                "1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n" +
+                "2. Social Media Brand Value = Followers × Value Per Follower\n" +
+                "3. Apply stability and growth adjustments",
+            },
+            {
+              role: "user",
+              content:
+                `Please calculate a business valuation based on the following data:\n${JSON.stringify(
+                  apiData,
+                  null,
+                  2
+                )}\n\n` +
+                "Use conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). " +
+                "If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.",
+            },
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to calculate valuation");
+      }
+
+      const data = await response.json();
+      setResult(data.content);
+    } catch (err) {
+      setError("Failed to calculate business valuation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const industries = [
+    "Retail",
+    "Service",
+    "Manufacturing",
+    "Tech",
+    "Food & Beverage",
+    "Other",
+  ];
+  const yearsOptions = [
+    "Less than 1 year",
+    "1–3 years",
+    "3–5 years",
+    "5–10 years",
+    "10+ years",
+  ];
+  const employeeOptions = ["None", "1–5", "6–10", "11–50", "51+"];
+  const trendOptions = ["Growing", "Stable", "Declining"];
 
   return (
     <>
       <Header />
-      <div className='mt-3'>
-        <Card sx={{ maxWidth: '42rem', margin: 'auto' }}>
+      <div className="max-w-4xl mx-auto p-4">
+        <Card className="w-full">
           <CardContent>
-            <Typography variant="h5" gutterBottom>Business Valuation Calculator</Typography>
-            <div className="space-y-6">
-              <FormControl fullWidth sx={{ mb: 3 }}>
+            <div className="flex flex-col space-y-6">
+              <FormControl fullWidth>
                 <TextField
-                  label="What is your business's annual revenue?"
+                  label="Company Name"
+                  value={formData.companyName}
+                  onChange={(e) =>
+                    handleInputChange("companyName", e.target.value)
+                  }
+                  helperText="Enter your registered business name"
+                />
+              </FormControl>
+
+              <FormControl fullWidth>
+                <TextField
+                  label="Email Address"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  helperText="We'll send your valuation report to this email"
+                />
+              </FormControl>
+
+              <FormControl fullWidth>
+                <TextField
+                  label="Annual Revenue"
                   type="number"
-                  placeholder="Enter amount in dollars"
                   value={formData.revenue}
-                  onChange={(e) => handleInputChange('revenue', e.target.value)}
-                  helperText="This is your business's total income before expenses. If you're unsure, use your best estimate."
+                  onChange={(e) => handleInputChange("revenue", e.target.value)}
+                  helperText="Your business's total income before expenses"
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
+              <FormControl fullWidth>
                 <TextField
-                  label="What is your annual net income or profit?"
+                  label="Annual Net Income"
                   type="number"
-                  placeholder="Enter amount in dollars"
                   value={formData.netIncome}
-                  onChange={(e) => handleInputChange('netIncome', e.target.value)}
-                  helperText="This is how much your business earned after expenses. If you're unsure, a typical business keeps 10–15% of revenue as profit."
+                  onChange={(e) =>
+                    handleInputChange("netIncome", e.target.value)
+                  }
+                  helperText="Your business's earnings after expenses"
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>What industry does your business operate in?</InputLabel>
+              <FormControl fullWidth>
+                <InputLabel>Industry</InputLabel>
                 <Select
                   value={formData.industry}
-                  label="What industry does your business operate in?"
-                  onChange={(e) => handleInputChange('industry', e.target.value)}
+                  label="Industry"
+                  onChange={(e) =>
+                    handleInputChange("industry", e.target.value)
+                  }
                 >
                   {industries.map((industry) => (
                     <MenuItem key={industry} value={industry.toLowerCase()}>
@@ -73,37 +187,41 @@ const BusinessValuationForm = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Choose the category that best describes your business.</FormHelperText>
+                <FormHelperText>
+                  Choose the category that best describes your business
+                </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
+              <FormControl fullWidth>
                 <TextField
-                  label="What is the total value of your business assets?"
+                  label="Total Assets Value"
                   type="number"
-                  placeholder="Enter amount in dollars"
                   value={formData.assets}
-                  onChange={(e) => handleInputChange('assets', e.target.value)}
-                  helperText="Include physical items like inventory, equipment, or property. If you're unsure, leave it blank."
+                  onChange={(e) => handleInputChange("assets", e.target.value)}
+                  helperText="Include inventory, equipment, property, etc."
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
+              <FormControl fullWidth>
                 <TextField
-                  label="What are your total liabilities?"
+                  label="Total Liabilities"
                   type="number"
-                  placeholder="Enter amount in dollars"
                   value={formData.liabilities}
-                  onChange={(e) => handleInputChange('liabilities', e.target.value)}
-                  helperText="This includes any loans or debts your business owes. If you're unsure, leave it blank."
+                  onChange={(e) =>
+                    handleInputChange("liabilities", e.target.value)
+                  }
+                  helperText="Include loans, debts, etc."
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>How many years has your business been in operation?</InputLabel>
+              <FormControl fullWidth>
+                <InputLabel>Years in Operation</InputLabel>
                 <Select
                   value={formData.yearsInOperation}
-                  label="How many years has your business been in operation?"
-                  onChange={(e) => handleInputChange('yearsInOperation', e.target.value)}
+                  label="Years in Operation"
+                  onChange={(e) =>
+                    handleInputChange("yearsInOperation", e.target.value)
+                  }
                 >
                   {yearsOptions.map((option) => (
                     <MenuItem key={option} value={option.toLowerCase()}>
@@ -111,26 +229,31 @@ const BusinessValuationForm = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>This helps us estimate business stability. Older businesses are generally more valuable.</FormHelperText>
+                <FormHelperText>
+                  How long has your business been operating?
+                </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
+              <FormControl fullWidth>
                 <TextField
-                  label="How many customers did you serve last month?"
+                  label="Monthly Customers"
                   type="number"
-                  placeholder="Enter number of customers"
                   value={formData.monthlyCustomers}
-                  onChange={(e) => handleInputChange('monthlyCustomers', e.target.value)}
-                  helperText="If you don't track this, estimate the number of individual customers or orders you handled in the last month."
+                  onChange={(e) =>
+                    handleInputChange("monthlyCustomers", e.target.value)
+                  }
+                  helperText="Number of customers served last month"
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>How many employees do you have?</InputLabel>
+              <FormControl fullWidth>
+                <InputLabel>Number of Employees</InputLabel>
                 <Select
                   value={formData.employees}
-                  label="How many employees do you have?"
-                  onChange={(e) => handleInputChange('employees', e.target.value)}
+                  label="Number of Employees"
+                  onChange={(e) =>
+                    handleInputChange("employees", e.target.value)
+                  }
                 >
                   {employeeOptions.map((option) => (
                     <MenuItem key={option} value={option.toLowerCase()}>
@@ -138,26 +261,31 @@ const BusinessValuationForm = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Include all part-time and full-time employees. If you're a solo business, select 'None'.</FormHelperText>
+                <FormHelperText>
+                  Include all part-time and full-time employees
+                </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
+              <FormControl fullWidth>
                 <TextField
-                  label="How many followers do you have on your most active social media account?"
+                  label="Social Media Followers"
                   type="number"
-                  placeholder="Enter number of followers"
                   value={formData.socialFollowers}
-                  onChange={(e) => handleInputChange('socialFollowers', e.target.value)}
-                  helperText="Enter the number of followers on the platform where your business is most active, like Instagram, Twitter, or LinkedIn."
+                  onChange={(e) =>
+                    handleInputChange("socialFollowers", e.target.value)
+                  }
+                  helperText="Number of followers on your most active platform"
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>Is your revenue growing, stable, or declining?</InputLabel>
+              <FormControl fullWidth>
+                <InputLabel>Revenue Trend</InputLabel>
                 <Select
                   value={formData.revenueTrend}
-                  label="Is your revenue growing, stable, or declining?"
-                  onChange={(e) => handleInputChange('revenueTrend', e.target.value)}
+                  label="Revenue Trend"
+                  onChange={(e) =>
+                    handleInputChange("revenueTrend", e.target.value)
+                  }
                 >
                   {trendOptions.map((option) => (
                     <MenuItem key={option} value={option.toLowerCase()}>
@@ -165,15 +293,48 @@ const BusinessValuationForm = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Pick the trend that best describes your revenue over the last 12 months.</FormHelperText>
+                <FormHelperText>
+                  Your revenue trend over the last 12 months
+                </FormHelperText>
               </FormControl>
+
+              <div className="w-full mt-6">
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="flex items-center justify-center">
+                    {loading ? (
+                      <CircularProgress size={24} className="text-white" />
+                    ) : (
+                      "Calculate Business Valuation"
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              {error && (
+                <Alert severity="error" className="mt-4">
+                  {error}
+                </Alert>
+              )}
+
+              {result && (
+                <Card className="mt-4">
+                  <CardContent>
+                    <h3 className="text-xl font-semibold mb-2">
+                      Valuation Result
+                    </h3>
+                    <div className="whitespace-pre-wrap">{result}</div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
-      <div className='mt-3'>
-        <Footer />
-      </div>
+      <Footer />
     </>
   );
 };
