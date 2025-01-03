@@ -2,7 +2,7 @@ import React from 'react';
 
 const Contact: React.FC = () => {
   return (
-    <div className="bg-gray-900 flex flex-col items-center justify-center text-white py-12 px-4 mb-4">
+    <div className="bg-black flex flex-col items-center justify-center text-white py-12 px-4 mb-4">
       <div className="max-w-3xl w-full text-center space-y-8">
         {/* Heading */}
         <h1 className=" text-3xl lg:text-5xl font-extrabold mb-6">

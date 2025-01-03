@@ -4,7 +4,7 @@ import React from "react";
 
 const ValuationTool = () => {
   return (
-    <div className="bg-gray-900 lg:h-[80vh] flex items-center py-8 lg:py-0">
+    <div className="bg-black lg:h-[80vh] flex items-center py-8 lg:py-0">
       <section className="w-full">
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
