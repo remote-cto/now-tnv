@@ -39,7 +39,7 @@ const ValuationQuestionAnswer = () => {
           <div className="lg:w-1/2 mb-6 lg:mb-0 lg:pl-10">
             <div className="relative group transform transition-all duration-500 hover:scale-105">
               <Image
-                src="/images/Valuation.jpg"
+                src="/images/Valuation.svg"
                 width={400}
                 height={400}
                 alt="Image Description"

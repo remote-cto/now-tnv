@@ -23,7 +23,7 @@ const WorkingValuationTool = () => {
         "TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.",
         "We also consider how many buyers are interested in sites like yours.",
       ],
-      imageSrc: "/images/STARTING.png",
+      imageSrc: "/images/START.svg",
     },
     {
       title: "Accurate & instant valuation",
@@ -31,7 +31,7 @@ const WorkingValuationTool = () => {
         "TNV has more historical sales data than anyone else. If the information you provide is accurate, your Flippa valuation will be a good indicator of price.",
         "No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation.",
       ],
-      imageSrc: "/images/ACCURATE.png",
+      imageSrc: "/images/ACCURATE.svg",
     },
     {
       title: "Supporting you, all the way",
@@ -39,14 +39,14 @@ const WorkingValuationTool = () => {
         "Based on the information you have provided, we'll give you a view of the platform and how it works. You can then choose to sell privately or publicly on the marketplace.",
         "Platform fees start from USD$39.",
       ],
-      imageSrc: "/images/SUPPORTING.png",
+      imageSrc: "/images/SUPPORTING.svg",
     },
     {
       title: "Trust & Safety by Design",
       description: [
         "Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.",
       ],
-      imageSrc: "/images/TRUSTED.png",
+      imageSrc: "/images/TRUSTED.svg",
     },
   ];
 
