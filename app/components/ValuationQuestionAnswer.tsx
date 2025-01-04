@@ -43,7 +43,7 @@ const ValuationQuestionAnswer = () => {
               }}
             >
               <Image
-                src="/images/valuation.jpg"
+                src="/images/Valuation.jpg"
                 width={400}
                 height={400}
                 alt="Image Description"
