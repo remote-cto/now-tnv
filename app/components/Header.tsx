@@ -13,7 +13,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200">
+    <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200 ">
       <div className="flex items-center">
         <div 
           className="text-xl lg:text-4xl font-extrabold relative group cursor-pointer"
@@ -46,11 +46,6 @@ const Header = () => {
                 isHovered === name ? "animate-pulse" : ""
               }`}
             />
-            <div className={`absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-300 ${
-              isHovered === name ? "opacity-100" : ""
-            }`}>
-              {name.charAt(0).toUpperCase() + name.slice(1)}
-            </div>
           </a>
         ))}
       </div>

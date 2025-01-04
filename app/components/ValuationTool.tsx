@@ -18,7 +18,7 @@ const ValuationTool = () => {
   };
 
   return (
-    <div className="bg-black lg:h-[90vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
+    <div className="bg-black lg:h-[85vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-black"></div>
 
