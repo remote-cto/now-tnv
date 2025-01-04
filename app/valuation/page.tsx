@@ -37,7 +37,7 @@ interface FormData {
 }
 
 interface QuestionCardProps {
-  number: number;
+  number: number | string;  // Updated to accept both number and string
   question: string;
   explanation: string;
   children: React.ReactNode;
