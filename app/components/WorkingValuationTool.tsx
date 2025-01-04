@@ -23,7 +23,7 @@ const WorkingValuationTool = () => {
         "TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.",
         "We also consider how many buyers are interested in sites like yours."
       ],
-      imageSrc: "/images/START.png"
+      imageSrc: "/images/STARTING.png"
     },
     {
       title: "Accurate & instant valuation",
