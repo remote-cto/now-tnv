@@ -1,19 +1,19 @@
-"use client"
-import React, { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const WorkingValuationTool = () => {
   const [activeSection, setActiveSection] = useState(0);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
-    whileInView: { 
-      opacity: 1, 
+    whileInView: {
+      opacity: 1,
       y: 0,
-      transition: { duration: 0.6 }
-    }
+      transition: { duration: 0.6 },
+    },
   };
 
   const sections = [
@@ -21,69 +21,75 @@ const WorkingValuationTool = () => {
       title: "Start with some key details",
       description: [
         "TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.",
-        "We also consider how many buyers are interested in sites like yours."
+        "We also consider how many buyers are interested in sites like yours.",
       ],
-      imageSrc: "/images/STARTING.png"
+      imageSrc: "/images/STARTING.png",
     },
     {
       title: "Accurate & instant valuation",
       description: [
         "TNV has more historical sales data than anyone else. If the information you provide is accurate, your Flippa valuation will be a good indicator of price.",
-        "No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation."
+        "No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation.",
       ],
-      imageSrc: "/images/ACCURATE.png"
+      imageSrc: "/images/ACCURATE.png",
     },
     {
       title: "Supporting you, all the way",
       description: [
         "Based on the information you have provided, we'll give you a view of the platform and how it works. You can then choose to sell privately or publicly on the marketplace.",
-        "Platform fees start from USD$39."
+        "Platform fees start from USD$39.",
       ],
-      imageSrc: "/images/SUPPORTING.png"
+      imageSrc: "/images/SUPPORTING.png",
     },
     {
       title: "Trust & Safety by Design",
       description: [
-        "Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller."
+        "Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.",
       ],
-      imageSrc: "/images/TRUSTED.png"
-    }
+      imageSrc: "/images/TRUSTED.png",
+    },
   ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
-      <motion.div 
+      <motion.div
         className="text-center mb-16"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-3xl lg:text-5xl font-extrabold mb-4">HOW DOES THE VALUATION TOOL WORK?</h1>
-        <p className="text-gray-800 text-2xl">We provide them with more choice and absolute transparency.</p>
+        <h1 className="text-3xl lg:text-5xl font-extrabold mb-4">
+          HOW DOES THE VALUATION TOOL WORK?
+        </h1>
+        <p className="text-gray-800 text-2xl">
+          We provide them with more choice and absolute transparency.
+        </p>
       </motion.div>
 
       <div className="space-y-24">
         {sections.map((section, index) => (
           <motion.div
             key={index}
-            className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+            className={`flex flex-col lg:flex-row items-center gap-12 ${
+              index % 2 === 1 ? "lg:flex-row-reverse" : ""
+            }`}
             variants={fadeInUp}
             initial="initial"
             whileInView="whileInView"
             viewport={{ once: true, margin: "-100px" }}
             onMouseEnter={() => setActiveSection(index)}
           >
-            <motion.div 
+            <motion.div
               className="w-48 h-48 lg:w-64 lg:h-64 flex-shrink-0 cursor-pointer"
               whileHover={{ scale: 1.15, rotate: 5 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <Image 
+              <Image
                 src={section.imageSrc}
-                alt={`${section.title} icon`} 
-                width={256} 
-                height={256} 
-                className="w-full h-full object-contain shadow-lg rounded-xl"
+                alt={`${section.title} icon`}
+                width={256}
+                height={256}
+                className="w-full h-full object-contain  rounded-xl"
               />
             </motion.div>
             <div className="flex-1">
@@ -91,8 +97,8 @@ const WorkingValuationTool = () => {
                 {section.title}
               </h2>
               {section.description.map((paragraph, pIndex) => (
-                <motion.p 
-                  key={pIndex} 
+                <motion.p
+                  key={pIndex}
                   className="text-gray-700 mb-3 text-xl"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -106,43 +112,21 @@ const WorkingValuationTool = () => {
         ))}
       </div>
 
-      <motion.div 
-        className="mt-16 text-center"
+      <motion.div
+        className="mt-16 "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
         <Link href="/valuation">
-          <motion.button 
+          <motion.button
             className="bg-black text-white px-10 py-4 rounded-full font-extrabold text-xl lg:text-3xl shadow-xl"
-            whileHover={{ scale: 1.05, backgroundColor: '#333' }}
+            whileHover={{ scale: 1.05, backgroundColor: "#333" }}
             whileTap={{ scale: 0.95 }}
           >
             Get a Free Valuation
           </motion.button>
         </Link>
-      </motion.div>
-
-      <motion.div 
-        className="flex justify-center gap-4 mt-12"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        {[0, 1, 2, 3].map((dot) => (
-          <motion.div
-            key={dot}
-            className={`w-8 h-8 rounded-full cursor-pointer ${
-              dot === activeSection ? 'bg-gray-800' : 'bg-gray-300'
-            }`}
-            whileHover={{ scale: 1.2 }}
-            animate={{ 
-              backgroundColor: dot === activeSection ? '#1F2937' : '#D1D5DB'
-            }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setActiveSection(dot)}
-          />
-        ))}
       </motion.div>
     </div>
   );

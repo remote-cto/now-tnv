@@ -18,7 +18,7 @@ const ValuationTool = () => {
   };
 
   return (
-    <div className="bg-black lg:h-[85vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
+    <div className="bg-black lg:h-[88vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-black"></div>
 
@@ -27,7 +27,7 @@ const ValuationTool = () => {
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+              <span className="bg-clip-text text-white">
                 The.Now.Valuation.Tool
               </span>
             </h2>
@@ -46,7 +46,7 @@ const ValuationTool = () => {
               </p>
             </div>
 
-            <div className="flex flex-col items-center lg:items-start">
+            <div className="flex flex-col items-center lg:items-start mt-7 mb-8 lg:mb-2">
               <Link href="/valuation">
                 <button
                   className="relative overflow-hidden bg-white text-black px-7 py-3 rounded-full font-extrabold text-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
@@ -54,14 +54,14 @@ const ValuationTool = () => {
                   onMouseLeave={() => setIsHovered(false)}
                 >
                   <span
-                    className={`relative z-10 transition-colors duration-300 ${
-                      isHovered ? "text-white" : ""
+                    className={`relative z-10  ${
+                      isHovered ? "text-black" : ""
                     }`}
                   >
                     Get a Free Valuation
                   </span>
                   <div
-                    className={`absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 transition-transform duration-300 ${
+                    className={`absolute inset-0 transition-transform duration-300 ${
                       isHovered ? "translate-x-0" : "-translate-x-full"
                     }`}
                   ></div>
@@ -69,19 +69,7 @@ const ValuationTool = () => {
               </Link>
             </div>
 
-            <div className="flex justify-center lg:justify-start gap-2 mt-6">
-              {[0, 1, 2].map((index: number) => (
-                <button
-                  key={index}
-                  onClick={() => handleDotClick(index)}
-                  className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                    activeSlide === index
-                      ? "bg-gradient-to-r from-blue-400 to-purple-600 scale-125"
-                      : "bg-gray-500 hover:bg-gray-400"
-                  }`}
-                />
-              ))}
-            </div>
+          
           </div>
 
           {/* Image Section */}
@@ -99,7 +87,7 @@ const ValuationTool = () => {
                 alt="Image Description"
                 className="w-full h-auto transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+              <div className="absolute inset-0 transition-opacity duration-300 rounded-lg"></div>
             </div>
           </div>
         </div>
