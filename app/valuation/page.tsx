@@ -1,25 +1,50 @@
+// BusinessValuationForm.tsx
 "use client";
 import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
+  CircularProgress,
+  Alert,
+  Tooltip,
   TextField,
+  Select,
   MenuItem,
   FormControl,
   InputLabel,
-  Select,
-  FormHelperText,
-  CircularProgress,
-  Alert,
+  Box,
+  Typography,
+  Paper,
+  IconButton,
 } from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import NowValuationTool from "../components/NowValuationTool";
-import ValuationPageFooter from "../components/ValuationPageFooter";
 import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
+import ValuationPageFooter from "../components/ValuationPageFooter";
 
-const BusinessValuationForm = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  companyName: string;
+  email: string;
+  revenue: string;
+  netIncome: string;
+  industry: string;
+  assets: string;
+  liabilities: string;
+  yearsInOperation: string;
+  monthlyCustomers: string;
+  employees: string;
+  socialFollowers: string;
+  revenueTrend: string;
+}
+
+interface QuestionCardProps {
+  number: number;
+  question: string;
+  explanation: string;
+  children: React.ReactNode;
+}
+
+const BusinessValuationForm: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     companyName: "",
     email: "",
     revenue: "",
@@ -34,19 +59,19 @@ const BusinessValuationForm = () => {
     revenueTrend: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
+  const handleInputChange = (field: keyof FormData, value: string): void => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     setLoading(true);
     setError(null);
     setResult(null);
@@ -105,14 +130,34 @@ const BusinessValuationForm = () => {
 
       const data = await response.json();
       setResult(data.content);
-      // Show success message about email
-      setSuccess("Your valuation report has been sent to your email.");
+      setSuccess("Your valuation report has been sent to your email");
     } catch (err) {
-      setError("Failed to calculate business valuation. Please try again.");
+      setError("Failed to calculate business valuation. Please try again");
     } finally {
       setLoading(false);
     }
   };
+
+  const QuestionCard: React.FC<QuestionCardProps> = ({
+    number,
+    question,
+    explanation,
+    children,
+  }) => (
+    <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        <Typography variant="h6" sx={{ mr: 1 }}>
+          {number}. {question}
+        </Typography>
+        <Tooltip title={explanation} placement="right" arrow>
+          <IconButton size="small">
+            <HelpOutlineIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box sx={{ mt: 2 }}>{children}</Box>
+    </Paper>
+  );
 
   const industries = [
     "Retail",
@@ -135,223 +180,277 @@ const BusinessValuationForm = () => {
   return (
     <>
       <Header />
-      <NowValuationTool/>
-      <ValuationQuestionAnswer/>
-      <div className="max-w-4xl mx-auto p-4">
-        <Card className="w-full">
-          <CardContent>
-            <div className="flex flex-col space-y-6">
-              <FormControl fullWidth>
-                <TextField
-                  label="Company Name"
-                  value={formData.companyName}
-                  onChange={(e) =>
-                    handleInputChange("companyName", e.target.value)
-                  }
-                  helperText="Enter your registered business name"
-                />
-              </FormControl>
+      <NowValuationTool />
+      <ValuationQuestionAnswer />
+      <div className="bg-black">
+        <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
+          {/* Basic Information */}
+          <QuestionCard
+            number="*"
+            question="Basic Information"
+            explanation="We'll use this to send you your valuation report"
+          >
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                fullWidth
+                label="Company Name"
+                value={formData.companyName}
+                onChange={(e) =>
+                  handleInputChange("companyName", e.target.value)
+                }
+              />
+              <TextField
+                fullWidth
+                label="Email Address"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+              />
+            </Box>
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Email Address"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  helperText="We'll send your valuation report to this email"
-                />
-              </FormControl>
+          {/* Revenue */}
+          <QuestionCard
+            number={1}
+            question="What is your business's annual revenue?"
+            explanation="This is your business's total income before expenses. If you’re unsure, use your best estimate."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Annual Revenue"
+              value={formData.revenue}
+              onChange={(e) => handleInputChange("revenue", e.target.value)}
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Annual Revenue"
-                  type="number"
-                  value={formData.revenue}
-                  onChange={(e) => handleInputChange("revenue", e.target.value)}
-                  helperText="Your business's total income before expenses"
-                />
-              </FormControl>
+          {/* Net Income */}
+          <QuestionCard
+            number={2}
+            question="What is your annual net income or profit?"
+            explanation="This is how much your business earned after expenses. If you’re unsure, a typical business keeps 10–15% of revenue as profit."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Annual Net Income"
+              value={formData.netIncome}
+              onChange={(e) => handleInputChange("netIncome", e.target.value)}
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Annual Net Income"
-                  type="number"
-                  value={formData.netIncome}
-                  onChange={(e) =>
-                    handleInputChange("netIncome", e.target.value)
-                  }
-                  helperText="Your business's earnings after expenses"
-                />
-              </FormControl>
+          {/* Industry */}
+          <QuestionCard
+            number={3}
+            question="What industry does your business operate in?"
+            explanation="Choose the category that best describes your business. This helps us apply an appropriate valuation multiple based on typical industry performance."
+          >
+            <FormControl fullWidth>
+              <InputLabel>Select Industry</InputLabel>
+              <Select
+                value={formData.industry}
+                label="Select Industry"
+                onChange={(e) => handleInputChange("industry", e.target.value)}
+              >
+                {industries.map((option) => (
+                  <MenuItem key={option} value={option.toLowerCase()}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <InputLabel>Industry</InputLabel>
-                <Select
-                  value={formData.industry}
-                  label="Industry"
-                  onChange={(e) =>
-                    handleInputChange("industry", e.target.value)
-                  }
-                >
-                  {industries.map((industry) => (
-                    <MenuItem key={industry} value={industry.toLowerCase()}>
-                      {industry}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>
-                  Choose the category that best describes your business
-                </FormHelperText>
-              </FormControl>
+          {/* Assets */}
+          <QuestionCard
+            number={4}
+            question="What is the total value of your business assets?"
+            explanation="Include physical items like inventory, equipment, or property. If you're unsure, leave it blank."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Total Assets Value"
+              value={formData.assets}
+              onChange={(e) => handleInputChange("assets", e.target.value)}
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Total Assets Value"
-                  type="number"
-                  value={formData.assets}
-                  onChange={(e) => handleInputChange("assets", e.target.value)}
-                  helperText="Include inventory, equipment, property, etc."
-                />
-              </FormControl>
+          {/* Liabilities */}
+          <QuestionCard
+            number={5}
+            question="What are your total liabilities?"
+            explanation="This includes any loans or debts your business owes. If you're unsure, leave it blank."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Total Liabilities"
+              value={formData.liabilities}
+              onChange={(e) => handleInputChange("liabilities", e.target.value)}
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Total Liabilities"
-                  type="number"
-                  value={formData.liabilities}
-                  onChange={(e) =>
-                    handleInputChange("liabilities", e.target.value)
-                  }
-                  helperText="Include loans, debts, etc."
-                />
-              </FormControl>
+          {/* Years in Operation */}
+          <QuestionCard
+            number={6}
+            question="How many years has your business been in operation?"
+            explanation="This helps us estimate business stability. Older businesses are generally more valuable."
+          >
+            <FormControl fullWidth>
+              <InputLabel>Years in Operation</InputLabel>
+              <Select
+                value={formData.yearsInOperation}
+                label="Years in Operation"
+                onChange={(e) =>
+                  handleInputChange("yearsInOperation", e.target.value)
+                }
+              >
+                {yearsOptions.map((option) => (
+                  <MenuItem key={option} value={option.toLowerCase()}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <InputLabel>Years in Operation</InputLabel>
-                <Select
-                  value={formData.yearsInOperation}
-                  label="Years in Operation"
-                  onChange={(e) =>
-                    handleInputChange("yearsInOperation", e.target.value)
-                  }
-                >
-                  {yearsOptions.map((option) => (
-                    <MenuItem key={option} value={option.toLowerCase()}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>
-                  How long has your business been operating?
-                </FormHelperText>
-              </FormControl>
+          {/* Monthly Customers */}
+          <QuestionCard
+            number={7}
+            question="How many customers did you serve last month?"
+            explanation="If you don't track this, estimate the number of individual customers or orders you handled in the last month."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Monthly Customers"
+              value={formData.monthlyCustomers}
+              onChange={(e) =>
+                handleInputChange("monthlyCustomers", e.target.value)
+              }
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Monthly Customers"
-                  type="number"
-                  value={formData.monthlyCustomers}
-                  onChange={(e) =>
-                    handleInputChange("monthlyCustomers", e.target.value)
-                  }
-                  helperText="Number of customers served last month"
-                />
-              </FormControl>
+          {/* Employees */}
+          <QuestionCard
+            number={8}
+            question="How many employees do you have?"
+            explanation="Include all part-time and full-time employees. If you're a solo business, select 'None'."
+          >
+            <FormControl fullWidth>
+              <InputLabel>Number of Employees</InputLabel>
+              <Select
+                value={formData.employees}
+                label="Number of Employees"
+                onChange={(e) => handleInputChange("employees", e.target.value)}
+              >
+                {employeeOptions.map((option) => (
+                  <MenuItem key={option} value={option.toLowerCase()}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <InputLabel>Number of Employees</InputLabel>
-                <Select
-                  value={formData.employees}
-                  label="Number of Employees"
-                  onChange={(e) =>
-                    handleInputChange("employees", e.target.value)
-                  }
-                >
-                  {employeeOptions.map((option) => (
-                    <MenuItem key={option} value={option.toLowerCase()}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>
-                  Include all part-time and full-time employees
-                </FormHelperText>
-              </FormControl>
+          {/* Social Media Followers */}
+          <QuestionCard
+            number={9}
+            question="How many followers do you have on your most active social media account?"
+            explanation="Enter the number of followers on the platform where your business is most active, like Instagram, Twitter, or LinkedIn."
+          >
+            <TextField
+              fullWidth
+              type="number"
+              label="Social Media Followers"
+              value={formData.socialFollowers}
+              onChange={(e) =>
+                handleInputChange("socialFollowers", e.target.value)
+              }
+            />
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <TextField
-                  label="Social Media Followers"
-                  type="number"
-                  value={formData.socialFollowers}
-                  onChange={(e) =>
-                    handleInputChange("socialFollowers", e.target.value)
-                  }
-                  helperText="Number of followers on your most active platform"
-                />
-              </FormControl>
+          {/* Revenue Trend */}
+          <QuestionCard
+            number={10}
+            question="Is your revenue growing, stable, or declining?"
+            explanation="Pick the trend that best describes your revenue over the last 12 months."
+          >
+            <FormControl fullWidth>
+              <InputLabel>Revenue Trend</InputLabel>
+              <Select
+                value={formData.revenueTrend}
+                label="Revenue Trend"
+                onChange={(e) =>
+                  handleInputChange("revenueTrend", e.target.value)
+                }
+              >
+                {trendOptions.map((option) => (
+                  <MenuItem key={option} value={option.toLowerCase()}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </QuestionCard>
 
-              <FormControl fullWidth>
-                <InputLabel>Revenue Trend</InputLabel>
-                <Select
-                  value={formData.revenueTrend}
-                  label="Revenue Trend"
-                  onChange={(e) =>
-                    handleInputChange("revenueTrend", e.target.value)
-                  }
-                >
-                  {trendOptions.map((option) => (
-                    <MenuItem key={option} value={option.toLowerCase()}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>
-                  Your revenue trend over the last 12 months
-                </FormHelperText>
-              </FormControl>
-
-              <div className="w-full mt-6">
-                <button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="flex items-center justify-center">
-                    {loading ? (
-                      <CircularProgress size={24} className="text-white" />
-                    ) : (
-                      "Calculate Business Valuation"
-                    )}
-                  </div>
-                </button>
-              </div>
-              {success && (
-                <Alert severity="success" className="mt-4">
-                  {success}
-                </Alert>
+          {/* Submit Button */}
+          <Box sx={{ mt: 4 }}>
+            <Box
+              component="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              sx={{
+                width: "100%",
+                bgcolor: "white",
+                color: "Black",
+                py: 2,
+                px: 4,
+                borderRadius: 1,
+                border: "none",
+                cursor: "pointer",
+                "&:hover": {
+                  bgcolor: "White",
+                },
+                "&:disabled": {
+                  opacity: 0.7,
+                },
+              }}
+            >
+              {loading ? (
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              ) : (
+                "Calculate Business Valuation"
               )}
+            </Box>
+          </Box>
 
-              {error && (
-                <Alert severity="error" className="mt-4">
-                  {error}
-                </Alert>
-              )}
+          {/* Messages */}
+          {success && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {success}
+            </Alert>
+          )}
 
-              {result && (
-                <Card className="mt-4">
-                  <CardContent>
-                    <h3 className="text-xl font-semibold mb-2">
-                      Valuation Result
-                    </h3>
-                    <div className="whitespace-pre-wrap">{result}</div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          {/* Results */}
+          {result && (
+            <Paper sx={{ mt: 2, p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Valuation Result
+              </Typography>
+              <Typography sx={{ whiteSpace: "pre-wrap" }}>{result}</Typography>
+            </Paper>
+          )}
+        </Box>
       </div>
-      <ValuationPageFooter/>
+      <ValuationPageFooter />
     </>
   );
 };
