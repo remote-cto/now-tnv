@@ -19,7 +19,9 @@
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
     "next": "15.1.2",
+    "nodemailer": "^6.9.16",
     "openai": "^4.77.0",
+    "pdfkit": "^0.16.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
@@ -27,6 +29,8 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
+    "@types/pdfkit": "^0.13.8",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^5"

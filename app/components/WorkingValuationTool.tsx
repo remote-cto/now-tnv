@@ -4,11 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-interface ValuationToolProps {
-  // Add props if needed
-}
-
-const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
+const WorkingValuationTool = () => {
   const [activeSection, setActiveSection] = useState(0);
 
   const fadeInUp = {
@@ -26,47 +22,51 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
       description: [
         "TNV uses your inputs and compares data to 1000's of similar sites that have sold on TNV. We look at business model, category, age and many other factors.",
         "We also consider how many buyers are interested in sites like yours."
-      ]
+      ],
+      imageSrc: "/images/START.png"
     },
     {
       title: "Accurate & instant valuation",
       description: [
         "TNV has more historical sales data than anyone else. If the information you provide is accurate, your Flippa valuation will be a good indicator of price.",
         "No waiting around! You will receive your valuation instantly. You will also be able to save and share your valuation."
-      ]
+      ],
+      imageSrc: "/images/ACCURATE.png"
     },
     {
       title: "Supporting you, all the way",
       description: [
         "Based on the information you have provided, we'll give you a view of the platform and how it works. You can then choose to sell privately or publicly on the marketplace.",
         "Platform fees start from USD$39."
-      ]
+      ],
+      imageSrc: "/images/SUPPORTING.png"
     },
     {
       title: "Trust & Safety by Design",
       description: [
         "Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller."
-      ]
+      ],
+      imageSrc: "/images/TRUSTED.png"
     }
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-12">
       <motion.div 
-        className="text-center mb-12"
+        className="text-center mb-16"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-xl lg:text-4xl font-extrabold mb-2">HOW DOES THE VALUATION TOOL WORK?</h1>
-        <p className="text-gray-800 text-xl">We provide them with more choice and absolute transparency.</p>
+        <h1 className="text-3xl lg:text-5xl font-extrabold mb-4">HOW DOES THE VALUATION TOOL WORK?</h1>
+        <p className="text-gray-800 text-2xl">We provide them with more choice and absolute transparency.</p>
       </motion.div>
 
-      <div className="space-y-16">
+      <div className="space-y-24">
         {sections.map((section, index) => (
           <motion.div
             key={index}
-            className={`flex items-center gap-8 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+            className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
             variants={fadeInUp}
             initial="initial"
             whileInView="whileInView"
@@ -74,22 +74,32 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
             onMouseEnter={() => setActiveSection(index)}
           >
             <motion.div 
-              className="w-24 h-24 flex-shrink-0"
-              whileHover={{ scale: 1.1 }}
+              className="w-48 h-48 lg:w-64 lg:h-64 flex-shrink-0 cursor-pointer"
+              whileHover={{ scale: 1.15, rotate: 5 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Image 
-                src="/images/start.png" 
+                src={section.imageSrc}
                 alt={`${section.title} icon`} 
-                width={96} 
-                height={96} 
-                className="w-full h-full"
+                width={256} 
+                height={256} 
+                className="w-full h-full object-contain shadow-lg rounded-xl"
               />
             </motion.div>
-            <div className={`transform transition-all duration-300 ${activeSection === index ? 'scale-105' : 'scale-100'}`}>
-              <h2 className="text-xl lg:text-3xl font-extrabold mb-3">{section.title}</h2>
+            <div className="flex-1">
+              <h2 className="text-2xl lg:text-4xl font-extrabold mb-4">
+                {section.title}
+              </h2>
               {section.description.map((paragraph, pIndex) => (
-                <p key={pIndex} className="text-gray-700 mb-2 text-lg">{paragraph}</p>
+                <motion.p 
+                  key={pIndex} 
+                  className="text-gray-700 mb-3 text-xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: pIndex * 0.2 }}
+                >
+                  {paragraph}
+                </motion.p>
               ))}
             </div>
           </motion.div>
@@ -97,14 +107,14 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
       </div>
 
       <motion.div 
-        className="mt-12"
+        className="mt-16 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
         <Link href="/valuation">
           <motion.button 
-            className="bg-black text-white px-7 py-3 rounded-full font-extrabold text-2xl"
+            className="bg-black text-white px-10 py-4 rounded-full font-extrabold text-xl lg:text-3xl shadow-xl"
             whileHover={{ scale: 1.05, backgroundColor: '#333' }}
             whileTap={{ scale: 0.95 }}
           >
@@ -113,19 +123,27 @@ const WorkingValuationTool: React.FC<ValuationToolProps> = () => {
         </Link>
       </motion.div>
 
-      <div className="flex gap-2 mt-8">
-        {[0, 1, 2].map((dot) => (
+      <motion.div 
+        className="flex justify-center gap-4 mt-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        {[0, 1, 2, 3].map((dot) => (
           <motion.div
             key={dot}
-            className={`w-6 h-6 rounded-full ${dot === activeSection % 3 ? 'bg-gray-500' : 'bg-gray-300'}`}
+            className={`w-8 h-8 rounded-full cursor-pointer ${
+              dot === activeSection ? 'bg-gray-800' : 'bg-gray-300'
+            }`}
             whileHover={{ scale: 1.2 }}
             animate={{ 
-              backgroundColor: dot === activeSection % 3 ? '#6B7280' : '#D1D5DB'
+              backgroundColor: dot === activeSection ? '#1F2937' : '#D1D5DB'
             }}
             transition={{ duration: 0.3 }}
+            onClick={() => setActiveSection(dot)}
           />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

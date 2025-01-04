@@ -34,6 +34,7 @@ const BusinessValuationForm = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
@@ -88,6 +89,10 @@ const BusinessValuationForm = () => {
                 "If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.",
             },
           ],
+          formData: {
+            email: formData.email,
+            companyName: formData.companyName,
+          },
         }),
       });
 
@@ -97,6 +102,8 @@ const BusinessValuationForm = () => {
 
       const data = await response.json();
       setResult(data.content);
+      // Show success message about email
+      setSuccess("Your valuation report has been sent to your email.");
     } catch (err) {
       setError("Failed to calculate business valuation. Please try again.");
     } finally {
@@ -313,6 +320,11 @@ const BusinessValuationForm = () => {
                   </div>
                 </button>
               </div>
+              {success && (
+                <Alert severity="success" className="mt-4">
+                  {success}
+                </Alert>
+              )}
 
               {error && (
                 <Alert severity="error" className="mt-4">
