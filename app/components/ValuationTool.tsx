@@ -4,7 +4,7 @@ import React from "react";
 
 const ValuationTool = () => {
   return (
-    <div className="bg-black lg:h-[80vh] flex items-center py-8 lg:py-0">
+    <div className="bg-black lg:h-[90vh] flex items-center py-8 lg:py-0">
       <section className="w-full">
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
@@ -43,13 +43,13 @@ const ValuationTool = () => {
           <div className="lg:w-1/2 mb-6 lg:mb-0 lg:pl-10">
             <div className="relative group">
               <Image
-                src="/images/Tool.svg"
+                src="/images/GROUP.png"
                 width={400}
                 height={400}
                 alt="Image Description"
-                className="w-full h-auto transform group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-auto transform  transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0  transition-opacity duration-300"></div>
             </div>
           </div>
         </div>
