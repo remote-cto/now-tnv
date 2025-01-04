@@ -5,17 +5,6 @@ import Link from "next/link";
 
 const ValuationTool = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  const slides = [
-    "Start with some key details",
-    "Start with some key details",
-    "Start with some key details",
-  ];
-
-  const handleDotClick = (index: number) => {
-    setActiveSlide(index);
-  };
 
   return (
     <div className="bg-black lg:h-[88vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
@@ -31,9 +20,7 @@ const ValuationTool = () => {
                 The.Now.Valuation.Tool
               </span>
             </h2>
-            <p className="text-xl font-extrabold sm:text-3xl mb-4 text-white">
-              {slides[activeSlide]}
-            </p>
+
             <div className="transform transition-all duration-500 hover:scale-105">
               <p className="text-lg text-white/90 sm:text-xl mb-4">
                 Flippa uses your inputs and compares data to thousands of
@@ -68,8 +55,6 @@ const ValuationTool = () => {
                 </button>
               </Link>
             </div>
-
-          
           </div>
 
           {/* Image Section */}

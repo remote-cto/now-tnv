@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import NowValuationTool from "../components/NowValuationTool";
+import ValuationPageFooter from "../components/ValuationPageFooter";
+import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
 
 const BusinessValuationForm = () => {
   const [formData, setFormData] = useState({
@@ -132,6 +135,8 @@ const BusinessValuationForm = () => {
   return (
     <>
       <Header />
+      <NowValuationTool/>
+      <ValuationQuestionAnswer/>
       <div className="max-w-4xl mx-auto p-4">
         <Card className="w-full">
           <CardContent>
@@ -346,7 +351,7 @@ const BusinessValuationForm = () => {
           </CardContent>
         </Card>
       </div>
-      <Footer />
+      <ValuationPageFooter/>
     </>
   );
 };
