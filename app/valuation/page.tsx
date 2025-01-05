@@ -42,9 +42,8 @@ interface FormErrors {
   email?: string;
 }
 
-
 interface QuestionCardProps {
-  number: number | string;  
+  number: number | string;
   question: string;
   explanation: string;
   children: React.ReactNode;
@@ -79,11 +78,11 @@ const BusinessValuationForm: React.FC = () => {
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
-    
+
     if (!formData.companyName.trim()) {
       errors.companyName = "Company name is required";
     }
-    
+
     if (!formData.email.trim()) {
       errors.email = "Email address is required";
     } else if (!validateEmail(formData.email)) {
@@ -223,7 +222,7 @@ const BusinessValuationForm: React.FC = () => {
       <NowValuationTool />
       <ValuationQuestionAnswer />
       <div className="bg-black">
-      <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
+        <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
           {/* Basic Information */}
           <QuestionCard
             number="*"
@@ -236,7 +235,9 @@ const BusinessValuationForm: React.FC = () => {
                 fullWidth
                 label="Company Name"
                 value={formData.companyName}
-                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("companyName", e.target.value)
+                }
                 error={!!formErrors.companyName}
                 helperText={formErrors.companyName}
               />
@@ -440,8 +441,6 @@ const BusinessValuationForm: React.FC = () => {
           </QuestionCard>
 
           {/* Submit Button */}
-          
-          
 
           {/* Messages */}
           {success && (
@@ -466,7 +465,6 @@ const BusinessValuationForm: React.FC = () => {
             </Paper>
           )}
         </Box>
-       
       </div>
       <SubmitButton loading={loading} onClick={handleSubmit} />
       <ValuationPageFooter />

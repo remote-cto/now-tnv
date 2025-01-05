@@ -22,11 +22,11 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request: Request) {
   try {
-    // Connect to MongoDB
     await dbConnect();
     
     const body = await request.json();
     const { email, companyName } = body.formData;
+    const formContent = body.messages[1].content;
     
     // Get GPT response
     const completion = await openai.chat.completions.create({
@@ -36,32 +36,52 @@ export async function POST(request: Request) {
       max_tokens: 500,
     });
 
-    const valuationResult = completion.choices[0].message.content;
+    const content = completion.choices[0].message.content;
+    
+    if (!content) {
+      throw new Error('No valuation result received from OpenAI');
+    }
+
+    const valuationResult: string = content;
     
     // Store in MongoDB
     const valuationData = {
       companyName,
       email,
-      formData: body.messages[1].content, // This contains all the form data
+      formData: formContent,
       valuationResult,
+      timestamp: new Date(),
     };
 
-    await Valuation.create(valuationData);
-    
-    try {
-      // Generate PDF
-      const pdfBuffer = await generateValuationPDF(valuationResult, companyName);
+    const savedValuation = await Valuation.create(valuationData);
 
-      // Send email
+    try {
+      // Generate PDF with the new generator
+      const pdfBuffer = await generateValuationPDF({
+        companyName,
+        valuationResult,
+        formData: formContent,
+      });
+
+      // Send email with PDF attachment
       await transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: email,
         subject: `Business Valuation Report - ${companyName}`,
-        text: 'Please find your business valuation report attached.',
+        html: `
+          <h1>Your Business Valuation Report</h1>
+          <p>Dear ${companyName},</p>
+          <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
+          <p>If you have any questions about your valuation, please don't hesitate to contact us.</p>
+          <br>
+          <p>Best regards,</p>
+          <p>Your Business Valuation Team</p>
+        `,
         attachments: [
           {
-            filename: `${companyName.replace(/\s+/g, '_')}_valuation.pdf`,
+            filename: `${companyName.replace(/\s+/g, '_')}_valuation_report.pdf`,
             content: pdfBuffer,
+            contentType: 'application/pdf',
           },
         ],
       });
@@ -69,12 +89,15 @@ export async function POST(request: Request) {
       return NextResponse.json({
         content: valuationResult,
         message: 'Valuation report has been sent to your email',
+        id: savedValuation._id,
       });
     } catch (pdfError) {
       console.error('PDF/Email Error:', pdfError);
+      
       return NextResponse.json({
         content: valuationResult,
         message: 'Valuation result available but PDF generation failed. Please try again later.',
+        id: savedValuation._id,
       }, { status: 207 });
     }
   } catch (error) {
