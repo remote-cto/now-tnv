@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import nodemailer from 'nodemailer';
 import { generateValuationPDF } from '../../../utils/pdfGenerator';
+import dbConnect from '../../lib/mongodb';
+import Valuation from '../../models/Valuation';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -20,6 +22,9 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request: Request) {
   try {
+    // Connect to MongoDB
+    await dbConnect();
+    
     const body = await request.json();
     const { email, companyName } = body.formData;
     
@@ -32,6 +37,16 @@ export async function POST(request: Request) {
     });
 
     const valuationResult = completion.choices[0].message.content;
+    
+    // Store in MongoDB
+    const valuationData = {
+      companyName,
+      email,
+      formData: body.messages[1].content, // This contains all the form data
+      valuationResult,
+    };
+
+    await Valuation.create(valuationData);
     
     try {
       // Generate PDF
@@ -57,11 +72,10 @@ export async function POST(request: Request) {
       });
     } catch (pdfError) {
       console.error('PDF/Email Error:', pdfError);
-      // Still return the valuation result even if PDF generation fails
       return NextResponse.json({
         content: valuationResult,
         message: 'Valuation result available but PDF generation failed. Please try again later.',
-      }, { status: 207 }); // 207 Multi-Status
+      }, { status: 207 });
     }
   } catch (error) {
     console.error('API Error:', error);

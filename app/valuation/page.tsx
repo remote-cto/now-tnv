@@ -1,4 +1,4 @@
-// BusinessValuationForm.tsx
+// app/valuation/page.tsx
 "use client";
 import React, { useState } from "react";
 import {
@@ -36,8 +36,14 @@ interface FormData {
   revenueTrend: string;
 }
 
+interface FormErrors {
+  companyName?: string;
+  email?: string;
+}
+
+
 interface QuestionCardProps {
-  number: number | string;  // Updated to accept both number and string
+  number: number | string;  
   question: string;
   explanation: string;
   children: React.ReactNode;
@@ -59,19 +65,53 @@ const BusinessValuationForm: React.FC = () => {
     revenueTrend: "",
   });
 
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {};
+    
+    if (!formData.companyName.trim()) {
+      errors.companyName = "Company name is required";
+    }
+    
+    if (!formData.email.trim()) {
+      errors.email = "Email address is required";
+    } else if (!validateEmail(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleInputChange = (field: keyof FormData, value: string): void => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+    // Clear error when user starts typing
+    if (formErrors[field as keyof FormErrors]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
   };
 
   const handleSubmit = async (): Promise<void> => {
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -176,14 +216,13 @@ const BusinessValuationForm: React.FC = () => {
   ];
   const employeeOptions = ["None", "1–5", "6–10", "11–50", "51+"];
   const trendOptions = ["Growing", "Stable", "Declining"];
-
   return (
     <>
       <Header />
       <NowValuationTool />
       <ValuationQuestionAnswer />
       <div className="bg-black">
-        <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
+      <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
           {/* Basic Information */}
           <QuestionCard
             number="*"
@@ -192,19 +231,23 @@ const BusinessValuationForm: React.FC = () => {
           >
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <TextField
+                required
                 fullWidth
                 label="Company Name"
                 value={formData.companyName}
-                onChange={(e) =>
-                  handleInputChange("companyName", e.target.value)
-                }
+                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                error={!!formErrors.companyName}
+                helperText={formErrors.companyName}
               />
               <TextField
+                required
                 fullWidth
                 label="Email Address"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
+                error={!!formErrors.email}
+                helperText={formErrors.email}
               />
             </Box>
           </QuestionCard>
