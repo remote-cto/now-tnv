@@ -20,6 +20,7 @@ import Header from "../components/Header";
 import NowValuationTool from "../components/NowValuationTool";
 import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
 import ValuationPageFooter from "../components/ValuationPageFooter";
+import SubmitButton from "../components/SubmitButton";
 
 interface FormData {
   companyName: string;
@@ -439,35 +440,8 @@ const BusinessValuationForm: React.FC = () => {
           </QuestionCard>
 
           {/* Submit Button */}
-          <Box sx={{ mt: 4 }}>
-            <Box
-              component="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              sx={{
-                width: "100%",
-                bgcolor: "white",
-                color: "Black",
-                py: 2,
-                px: 4,
-                borderRadius: 1,
-                border: "none",
-                cursor: "pointer",
-                "&:hover": {
-                  bgcolor: "White",
-                },
-                "&:disabled": {
-                  opacity: 0.7,
-                },
-              }}
-            >
-              {loading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                "Calculate Business Valuation"
-              )}
-            </Box>
-          </Box>
+          
+          
 
           {/* Messages */}
           {success && (
@@ -492,7 +466,9 @@ const BusinessValuationForm: React.FC = () => {
             </Paper>
           )}
         </Box>
+       
       </div>
+      <SubmitButton loading={loading} onClick={handleSubmit} />
       <ValuationPageFooter />
     </>
   );
