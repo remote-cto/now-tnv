@@ -166,8 +166,8 @@ const BusinessValuationForm: React.FC = () => {
 
   const handleTextFieldChange = useCallback(
     (field: keyof FormData) => 
-      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-        const value = e.target.value;
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>): void => {
+        const value = e.target.value; // Works for both React.ChangeEvent and SelectChangeEvent
         setFormState((prev) => ({
           ...prev,
           data: { ...prev.data, [field]: value },
