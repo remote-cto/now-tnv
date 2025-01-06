@@ -1,6 +1,5 @@
-// app/valuation/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   CircularProgress,
   Alert,
@@ -14,6 +13,8 @@ import {
   Typography,
   Paper,
   IconButton,
+  ThemeProvider,
+  createTheme,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Header from "../components/Header";
@@ -22,6 +23,56 @@ import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
 import ValuationPageFooter from "../components/ValuationPageFooter";
 import SubmitButton from "../components/SubmitButton";
 
+
+
+// Create custom theme
+const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor: 'black',
+            },
+            '&:hover fieldset': {
+              borderColor: 'black',
+            },
+          },
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Rest of your interfaces and components remain the same
 interface FormData {
   companyName: string;
   email: string;
@@ -42,147 +93,17 @@ interface FormErrors {
   email?: string;
 }
 
-interface QuestionCardProps {
-  number: number | string;
-  question: string;
-  explanation: string;
-  children: React.ReactNode;
-}
-
-const BusinessValuationForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    companyName: "",
-    email: "",
-    revenue: "",
-    netIncome: "",
-    industry: "",
-    assets: "",
-    liabilities: "",
-    yearsInOperation: "",
-    monthlyCustomers: "",
-    employees: "",
-    socialFollowers: "",
-    revenueTrend: "",
-  });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateForm = (): boolean => {
-    const errors: FormErrors = {};
-
-    if (!formData.companyName.trim()) {
-      errors.companyName = "Company name is required";
-    }
-
-    if (!formData.email.trim()) {
-      errors.email = "Email address is required";
-    } else if (!validateEmail(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (field: keyof FormData, value: string): void => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-    // Clear error when user starts typing
-    if (formErrors[field as keyof FormErrors]) {
-      setFormErrors((prev) => ({
-        ...prev,
-        [field]: undefined,
-      }));
-    }
-  };
-
-  const handleSubmit = async (): Promise<void> => {
-    if (!validateForm()) {
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const apiData = {
-        annual_revenue: parseFloat(formData.revenue) || 0,
-        net_income: formData.netIncome ? parseFloat(formData.netIncome) : null,
-        industry: formData.industry || "other",
-        assets: parseFloat(formData.assets) || 0,
-        liabilities: parseFloat(formData.liabilities) || 0,
-        years_in_operation: formData.yearsInOperation || "less than 1 year",
-        customers_last_month: parseInt(formData.monthlyCustomers) || 0,
-        employees: formData.employees || "none",
-        social_media_followers: parseInt(formData.socialFollowers) || 0,
-        revenue_trend: formData.revenueTrend || "stable",
-      };
-
-      const response = await fetch("/api/calculatevaluation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n" +
-                "1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n" +
-                "2. Social Media Brand Value = Followers × Value Per Follower\n" +
-                "3. Apply stability and growth adjustments",
-            },
-            {
-              role: "user",
-              content:
-                `Please calculate a business valuation based on the following data:\n${JSON.stringify(
-                  apiData,
-                  null,
-                  2
-                )}\n\n` +
-                "Use conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). " +
-                "If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.",
-            },
-          ],
-          formData: {
-            email: formData.email,
-            companyName: formData.companyName,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to calculate valuation");
-      }
-
-      const data = await response.json();
-      setResult(data.content);
-      setSuccess("Your valuation report has been sent to your email");
-    } catch (err) {
-      setError("Failed to calculate business valuation. Please try again");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const QuestionCard: React.FC<QuestionCardProps> = ({
+const QuestionCard = React.memo(
+  ({
     number,
     question,
     explanation,
     children,
+  }: {
+    number: number | string;
+    question: string;
+    explanation: string;
+    children: React.ReactNode;
   }) => (
     <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -197,25 +118,161 @@ const BusinessValuationForm: React.FC = () => {
       </Box>
       <Box sx={{ mt: 2 }}>{children}</Box>
     </Paper>
+  )
+);
+
+const BusinessValuationForm: React.FC = () => {
+  const [formState, setFormState] = React.useState({
+    data: {
+      companyName: "",
+      email: "",
+      revenue: "",
+      netIncome: "",
+      industry: "",
+      assets: "",
+      liabilities: "",
+      yearsInOperation: "",
+      monthlyCustomers: "",
+      employees: "",
+      socialFollowers: "",
+      revenueTrend: "",
+    },
+    errors: {} as FormErrors,
+    loading: false,
+    result: null as string | null,
+    error: null as string | null,
+    success: null as string | null,
+  });
+
+  const validateEmail = useCallback((email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }, []);
+
+  const validateForm = useCallback((): boolean => {
+    const errors: FormErrors = {};
+    const { companyName, email } = formState.data;
+
+    if (!companyName.trim()) {
+      errors.companyName = "Company name is required";
+    }
+    if (!email.trim()) {
+      errors.email = "Email address is required";
+    } else if (!validateEmail(email)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    setFormState((prev) => ({ ...prev, errors }));
+    return Object.keys(errors).length === 0;
+  }, [formState.data, validateEmail]);
+
+  const handleInputChange = useCallback(
+    (field: keyof FormData) =>
+      (e: React.ChangeEvent<HTMLInputElement | { value: unknown }>): void => {
+        const value = String(e.target.value);
+        setFormState((prev) => ({
+          ...prev,
+          data: { ...prev.data, [field]: value },
+          errors: { ...prev.errors, [field]: undefined },
+        }));
+      },
+    []
   );
 
-  const industries = [
-    "Retail",
-    "Service",
-    "Manufacturing",
-    "Tech",
-    "Food & Beverage",
-    "Other",
-  ];
-  const yearsOptions = [
-    "Less than 1 year",
-    "1–3 years",
-    "3–5 years",
-    "5–10 years",
-    "10+ years",
-  ];
-  const employeeOptions = ["None", "1–5", "6–10", "11–50", "51+"];
-  const trendOptions = ["Growing", "Stable", "Declining"];
+  const handleSubmit = useCallback(async (): Promise<void> => {
+    if (!validateForm()) return;
+
+    setFormState((prev) => ({
+      ...prev,
+      loading: true,
+      error: null,
+      result: null,
+    }));
+
+    try {
+      const apiData = {
+        annual_revenue: parseFloat(formState.data.revenue) || 0,
+        net_income: formState.data.netIncome
+          ? parseFloat(formState.data.netIncome)
+          : null,
+        industry: formState.data.industry || "other",
+        assets: parseFloat(formState.data.assets) || 0,
+        liabilities: parseFloat(formState.data.liabilities) || 0,
+        years_in_operation:
+          formState.data.yearsInOperation || "less than 1 year",
+        customers_last_month: parseInt(formState.data.monthlyCustomers) || 0,
+        employees: formState.data.employees || "none",
+        social_media_followers: parseInt(formState.data.socialFollowers) || 0,
+        revenue_trend: formState.data.revenueTrend || "stable",
+      };
+
+      const response = await fetch("/api/calculatevaluation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n2. Social Media Brand Value = Followers × Value Per Follower\n3. Apply stability and growth adjustments",
+            },
+            {
+              role: "user",
+              content: `Please calculate a business valuation based on the following data:\n${JSON.stringify(
+                apiData,
+                null,
+                2
+              )}\n\nUse conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.`,
+            },
+          ],
+          formData: {
+            email: formState.data.email,
+            companyName: formState.data.companyName,
+          },
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to calculate valuation");
+
+      const data = await response.json();
+      setFormState((prev) => ({
+        ...prev,
+        result: data.content,
+        success: "Your valuation report has been sent to your email",
+        loading: false,
+      }));
+    } catch (err) {
+      setFormState((prev) => ({
+        ...prev,
+        error: "Failed to calculate business valuation. Please try again",
+        loading: false,
+      }));
+    }
+  }, [formState.data, validateForm]);
+
+  const staticData = useMemo(
+    () => ({
+      industries: [
+        "Retail",
+        "Service",
+        "Manufacturing",
+        "Tech",
+        "Food & Beverage",
+        "Other",
+      ],
+      yearsOptions: [
+        "Less than 1 year",
+        "1–3 years",
+        "3–5 years",
+        "5–10 years",
+        "10+ years",
+      ],
+      employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
+      trendOptions: ["Growing", "Stable", "Declining"],
+    }),
+    []
+  );
+
   return (
     <>
       <Header />
@@ -223,7 +280,6 @@ const BusinessValuationForm: React.FC = () => {
       <ValuationQuestionAnswer />
       <div className="bg-black">
         <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
-          {/* Basic Information */}
           <QuestionCard
             number="*"
             question="Basic Information"
@@ -234,57 +290,60 @@ const BusinessValuationForm: React.FC = () => {
                 required
                 fullWidth
                 label="Company Name"
-                value={formData.companyName}
-                onChange={(e) =>
-                  handleInputChange("companyName", e.target.value)
-                }
-                error={!!formErrors.companyName}
-                helperText={formErrors.companyName}
+                value={formState.data.companyName}
+                onChange={handleInputChange("companyName")}
+                error={!!formState.errors.companyName}
+                helperText={formState.errors.companyName}
               />
               <TextField
                 required
                 fullWidth
                 label="Email Address"
                 type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                error={!!formErrors.email}
-                helperText={formErrors.email}
+                value={formState.data.email}
+                onChange={handleInputChange("email")}
+                error={!!formState.errors.email}
+                helperText={formState.errors.email}
               />
             </Box>
           </QuestionCard>
 
-          {/* Revenue */}
-          <QuestionCard
-            number={1}
-            question="What is your business's annual revenue?"
-            explanation="This is your business's total income before expenses. If you’re unsure, use your best estimate."
-          >
-            <TextField
-              fullWidth
-              type="number"
-              label="Annual Revenue"
-              value={formData.revenue}
-              onChange={(e) => handleInputChange("revenue", e.target.value)}
-            />
-          </QuestionCard>
+          {[
+            {
+              number: 1,
+              question: "What is your business's annual revenue?",
+              explanation:
+                "This is your business's total income before expenses. If you're unsure, use your best estimate.",
+              field: "revenue",
+              type: "number",
+              label: "Annual Revenue",
+            },
+            {
+              number: 2,
+              question: "What is your annual net income or profit?",
+              explanation:
+                "This is how much your business earned after expenses. If you're unsure, a typical business keeps 10–15% of revenue as profit.",
+              field: "netIncome",
+              type: "number",
+              label: "Annual Net Income",
+            },
+          ].map(({ number, question, explanation, field, type, label }) => (
+            <QuestionCard
+              key={number}
+              number={number}
+              question={question}
+              explanation={explanation}
+            >
+              <TextField
+                fullWidth
+                type={type}
+                label={label}
+                value={formState.data[field as keyof FormData]}
+                onChange={handleInputChange(field as keyof FormData)}
+              />
+            </QuestionCard>
+          ))}
 
-          {/* Net Income */}
-          <QuestionCard
-            number={2}
-            question="What is your annual net income or profit?"
-            explanation="This is how much your business earned after expenses. If you’re unsure, a typical business keeps 10–15% of revenue as profit."
-          >
-            <TextField
-              fullWidth
-              type="number"
-              label="Annual Net Income"
-              value={formData.netIncome}
-              onChange={(e) => handleInputChange("netIncome", e.target.value)}
-            />
-          </QuestionCard>
-
-          {/* Industry */}
           <QuestionCard
             number={3}
             question="What industry does your business operate in?"
@@ -293,11 +352,11 @@ const BusinessValuationForm: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Select Industry</InputLabel>
               <Select
-                value={formData.industry}
+                value={formState.data.industry}
                 label="Select Industry"
-                onChange={(e) => handleInputChange("industry", e.target.value)}
+                onChange={(e) => handleInputChange("industry")(e)}
               >
-                {industries.map((option) => (
+                {staticData.industries.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
                     {option}
                   </MenuItem>
@@ -306,37 +365,40 @@ const BusinessValuationForm: React.FC = () => {
             </FormControl>
           </QuestionCard>
 
-          {/* Assets */}
-          <QuestionCard
-            number={4}
-            question="What is the total value of your business assets?"
-            explanation="Include physical items like inventory, equipment, or property. If you're unsure, leave it blank."
-          >
-            <TextField
-              fullWidth
-              type="number"
-              label="Total Assets Value"
-              value={formData.assets}
-              onChange={(e) => handleInputChange("assets", e.target.value)}
-            />
-          </QuestionCard>
+          {[
+            {
+              number: 4,
+              question: "What is the total value of your business assets?",
+              explanation:
+                "Include physical items like inventory, equipment, or property. If you're unsure, leave it blank.",
+              field: "assets",
+              label: "Total Assets Value",
+            },
+            {
+              number: 5,
+              question: "What are your total liabilities?",
+              explanation:
+                "This includes any loans or debts your business owes. If you're unsure, leave it blank.",
+              field: "liabilities",
+              label: "Total Liabilities",
+            },
+          ].map(({ number, question, explanation, field, label }) => (
+            <QuestionCard
+              key={number}
+              number={number}
+              question={question}
+              explanation={explanation}
+            >
+              <TextField
+                fullWidth
+                type="number"
+                label={label}
+                value={formState.data[field as keyof FormData]}
+                onChange={handleInputChange(field as keyof FormData)}
+              />
+            </QuestionCard>
+          ))}
 
-          {/* Liabilities */}
-          <QuestionCard
-            number={5}
-            question="What are your total liabilities?"
-            explanation="This includes any loans or debts your business owes. If you're unsure, leave it blank."
-          >
-            <TextField
-              fullWidth
-              type="number"
-              label="Total Liabilities"
-              value={formData.liabilities}
-              onChange={(e) => handleInputChange("liabilities", e.target.value)}
-            />
-          </QuestionCard>
-
-          {/* Years in Operation */}
           <QuestionCard
             number={6}
             question="How many years has your business been in operation?"
@@ -345,13 +407,11 @@ const BusinessValuationForm: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Years in Operation</InputLabel>
               <Select
-                value={formData.yearsInOperation}
+                value={formState.data.yearsInOperation}
                 label="Years in Operation"
-                onChange={(e) =>
-                  handleInputChange("yearsInOperation", e.target.value)
-                }
+                onChange={(e) => handleInputChange("yearsInOperation")(e)}
               >
-                {yearsOptions.map((option) => (
+                {staticData.yearsOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
                     {option}
                   </MenuItem>
@@ -360,7 +420,6 @@ const BusinessValuationForm: React.FC = () => {
             </FormControl>
           </QuestionCard>
 
-          {/* Monthly Customers */}
           <QuestionCard
             number={7}
             question="How many customers did you serve last month?"
@@ -370,14 +429,11 @@ const BusinessValuationForm: React.FC = () => {
               fullWidth
               type="number"
               label="Monthly Customers"
-              value={formData.monthlyCustomers}
-              onChange={(e) =>
-                handleInputChange("monthlyCustomers", e.target.value)
-              }
+              value={formState.data.monthlyCustomers}
+              onChange={handleInputChange("monthlyCustomers")}
             />
           </QuestionCard>
 
-          {/* Employees */}
           <QuestionCard
             number={8}
             question="How many employees do you have?"
@@ -386,11 +442,11 @@ const BusinessValuationForm: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Number of Employees</InputLabel>
               <Select
-                value={formData.employees}
+                value={formState.data.employees}
                 label="Number of Employees"
-                onChange={(e) => handleInputChange("employees", e.target.value)}
+                onChange={(e) => handleInputChange("employees")(e)}
               >
-                {employeeOptions.map((option) => (
+                {staticData.employeeOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
                     {option}
                   </MenuItem>
@@ -399,7 +455,6 @@ const BusinessValuationForm: React.FC = () => {
             </FormControl>
           </QuestionCard>
 
-          {/* Social Media Followers */}
           <QuestionCard
             number={9}
             question="How many followers do you have on your most active social media account?"
@@ -409,14 +464,11 @@ const BusinessValuationForm: React.FC = () => {
               fullWidth
               type="number"
               label="Social Media Followers"
-              value={formData.socialFollowers}
-              onChange={(e) =>
-                handleInputChange("socialFollowers", e.target.value)
-              }
+              value={formState.data.socialFollowers}
+              onChange={handleInputChange("socialFollowers")}
             />
           </QuestionCard>
 
-          {/* Revenue Trend */}
           <QuestionCard
             number={10}
             question="Is your revenue growing, stable, or declining?"
@@ -425,13 +477,11 @@ const BusinessValuationForm: React.FC = () => {
             <FormControl fullWidth>
               <InputLabel>Revenue Trend</InputLabel>
               <Select
-                value={formData.revenueTrend}
+                value={formState.data.revenueTrend}
                 label="Revenue Trend"
-                onChange={(e) =>
-                  handleInputChange("revenueTrend", e.target.value)
-                }
+                onChange={(e) => handleInputChange("revenueTrend")(e)}
               >
-                {trendOptions.map((option) => (
+                {staticData.trendOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
                     {option}
                   </MenuItem>
@@ -440,33 +490,31 @@ const BusinessValuationForm: React.FC = () => {
             </FormControl>
           </QuestionCard>
 
-          {/* Submit Button */}
-
-          {/* Messages */}
-          {success && (
+          {formState.success && (
             <Alert severity="success" sx={{ mt: 2 }}>
-              {success}
+              {formState.success}
             </Alert>
           )}
 
-          {error && (
+          {formState.error && (
             <Alert severity="error" sx={{ mt: 2 }}>
-              {error}
+              {formState.error}
             </Alert>
           )}
 
-          {/* Results */}
-          {result && (
+          {formState.result && (
             <Paper sx={{ mt: 2, p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Valuation Result
               </Typography>
-              <Typography sx={{ whiteSpace: "pre-wrap" }}>{result}</Typography>
+              <Typography sx={{ whiteSpace: "pre-wrap" }}>
+                {formState.result}
+              </Typography>
             </Paper>
           )}
         </Box>
       </div>
-      <SubmitButton loading={loading} onClick={handleSubmit} />
+      <SubmitButton loading={formState.loading} onClick={handleSubmit} />
       <ValuationPageFooter />
     </>
   );
