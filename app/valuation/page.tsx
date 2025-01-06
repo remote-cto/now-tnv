@@ -1,3 +1,4 @@
+//app/valuation/page.tsx
 "use client";
 import React, { useCallback, useMemo } from "react";
 import {
@@ -15,6 +16,7 @@ import {
   IconButton,
   ThemeProvider,
   createTheme,
+  SelectChangeEvent,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Header from "../components/Header";
@@ -23,9 +25,6 @@ import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
 import ValuationPageFooter from "../components/ValuationPageFooter";
 import SubmitButton from "../components/SubmitButton";
 
-
-
-// Create custom theme
 const theme = createTheme({
   components: {
     MuiTextField: {
@@ -72,7 +71,6 @@ const theme = createTheme({
   },
 });
 
-// Rest of your interfaces and components remain the same
 interface FormData {
   companyName: string;
   email: string;
@@ -93,33 +91,33 @@ interface FormErrors {
   email?: string;
 }
 
-const QuestionCard = React.memo(
-  ({
-    number,
-    question,
-    explanation,
-    children,
-  }: {
-    number: number | string;
-    question: string;
-    explanation: string;
-    children: React.ReactNode;
-  }) => (
-    <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Typography variant="h6" sx={{ mr: 1 }}>
-          {number}. {question}
-        </Typography>
-        <Tooltip title={explanation} placement="right" arrow>
-          <IconButton size="small">
-            <HelpOutlineIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Box>
-      <Box sx={{ mt: 2 }}>{children}</Box>
-    </Paper>
-  )
-);
+interface QuestionCardProps {
+  number: number | string;
+  question: string;
+  explanation: string;
+  children: React.ReactNode;
+}
+
+const QuestionCard: React.FC<QuestionCardProps> = React.memo(({
+  number,
+  question,
+  explanation,
+  children,
+}) => (
+  <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+      <Typography variant="h6" sx={{ mr: 1 }}>
+        {number}. {question}
+      </Typography>
+      <Tooltip title={explanation} placement="right" arrow>
+        <IconButton size="small">
+          <HelpOutlineIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </Box>
+    <Box sx={{ mt: 2 }}>{children}</Box>
+  </Paper>
+));
 
 const BusinessValuationForm: React.FC = () => {
   const [formState, setFormState] = React.useState({
@@ -136,7 +134,7 @@ const BusinessValuationForm: React.FC = () => {
       employees: "",
       socialFollowers: "",
       revenueTrend: "",
-    },
+    } as FormData,
     errors: {} as FormErrors,
     loading: false,
     result: null as string | null,
@@ -166,10 +164,23 @@ const BusinessValuationForm: React.FC = () => {
     return Object.keys(errors).length === 0;
   }, [formState.data, validateEmail]);
 
-  const handleInputChange = useCallback(
-    (field: keyof FormData) =>
-      (e: React.ChangeEvent<HTMLInputElement | { value: unknown }>): void => {
-        const value = String(e.target.value);
+  const handleTextFieldChange = useCallback(
+    (field: keyof FormData) => 
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+        const value = e.target.value;
+        setFormState((prev) => ({
+          ...prev,
+          data: { ...prev.data, [field]: value },
+          errors: { ...prev.errors, [field]: undefined },
+        }));
+      },
+    []
+  );
+
+  const handleSelectChange = useCallback(
+    (field: keyof FormData) => 
+      (e: SelectChangeEvent<string>): void => {
+        const value = e.target.value;
         setFormState((prev) => ({
           ...prev,
           data: { ...prev.data, [field]: value },
@@ -198,8 +209,7 @@ const BusinessValuationForm: React.FC = () => {
         industry: formState.data.industry || "other",
         assets: parseFloat(formState.data.assets) || 0,
         liabilities: parseFloat(formState.data.liabilities) || 0,
-        years_in_operation:
-          formState.data.yearsInOperation || "less than 1 year",
+        years_in_operation: formState.data.yearsInOperation || "less than 1 year",
         customers_last_month: parseInt(formState.data.monthlyCustomers) || 0,
         employees: formState.data.employees || "none",
         social_media_followers: parseInt(formState.data.socialFollowers) || 0,
@@ -213,16 +223,11 @@ const BusinessValuationForm: React.FC = () => {
           messages: [
             {
               role: "system",
-              content:
-                "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n2. Social Media Brand Value = Followers × Value Per Follower\n3. Apply stability and growth adjustments",
+              content: "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n2. Social Media Brand Value = Followers × Value Per Follower\n3. Apply stability and growth adjustments",
             },
             {
               role: "user",
-              content: `Please calculate a business valuation based on the following data:\n${JSON.stringify(
-                apiData,
-                null,
-                2
-              )}\n\nUse conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.`,
+              content: `Please calculate a business valuation based on the following data:\n${JSON.stringify(apiData, null, 2)}\n\nUse conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.`,
             },
           ],
           formData: {
@@ -252,32 +257,21 @@ const BusinessValuationForm: React.FC = () => {
 
   const staticData = useMemo(
     () => ({
-      industries: [
-        "Retail",
-        "Service",
-        "Manufacturing",
-        "Tech",
-        "Food & Beverage",
-        "Other",
-      ],
-      yearsOptions: [
-        "Less than 1 year",
-        "1–3 years",
-        "3–5 years",
-        "5–10 years",
-        "10+ years",
-      ],
+      industries: ["Retail", "Service", "Manufacturing", "Tech", "Food & Beverage", "Other"],
+      yearsOptions: ["Less than 1 year", "1–3 years", "3–5 years", "5–10 years", "10+ years"],
       employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
       trendOptions: ["Growing", "Stable", "Declining"],
     }),
     []
   );
 
+
   return (
     <>
       <Header />
       <NowValuationTool />
       <ValuationQuestionAnswer />
+      <ThemeProvider theme={theme}>
       <div className="bg-black">
         <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
           <QuestionCard
@@ -285,26 +279,27 @@ const BusinessValuationForm: React.FC = () => {
             question="Basic Information"
             explanation="We'll use this to send you your valuation report"
           >
+            
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <TextField
-                required
-                fullWidth
-                label="Company Name"
-                value={formState.data.companyName}
-                onChange={handleInputChange("companyName")}
-                error={!!formState.errors.companyName}
-                helperText={formState.errors.companyName}
-              />
-              <TextField
-                required
-                fullWidth
-                label="Email Address"
-                type="email"
-                value={formState.data.email}
-                onChange={handleInputChange("email")}
-                error={!!formState.errors.email}
-                helperText={formState.errors.email}
-              />
+                <TextField
+                  required
+                  fullWidth
+                  label="Company Name"
+                  value={formState.data.companyName}
+                  onChange={handleTextFieldChange("companyName")}
+                  error={!!formState.errors.companyName}
+                  helperText={formState.errors.companyName}
+                />
+                <TextField
+                  required
+                  fullWidth
+                  label="Email Address"
+                  type="email"
+                  value={formState.data.email}
+                  onChange={handleTextFieldChange("email")}
+                  error={!!formState.errors.email}
+                  helperText={formState.errors.email}
+                />
             </Box>
           </QuestionCard>
 
@@ -339,7 +334,7 @@ const BusinessValuationForm: React.FC = () => {
                 type={type}
                 label={label}
                 value={formState.data[field as keyof FormData]}
-                onChange={handleInputChange(field as keyof FormData)}
+                onChange={handleTextFieldChange(field as keyof FormData)}
               />
             </QuestionCard>
           ))}
@@ -354,7 +349,7 @@ const BusinessValuationForm: React.FC = () => {
               <Select
                 value={formState.data.industry}
                 label="Select Industry"
-                onChange={(e) => handleInputChange("industry")(e)}
+                onChange={handleTextFieldChange("industry")}
               >
                 {staticData.industries.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
@@ -394,7 +389,7 @@ const BusinessValuationForm: React.FC = () => {
                 type="number"
                 label={label}
                 value={formState.data[field as keyof FormData]}
-                onChange={handleInputChange(field as keyof FormData)}
+                onChange={handleTextFieldChange(field as keyof FormData)}
               />
             </QuestionCard>
           ))}
@@ -409,7 +404,7 @@ const BusinessValuationForm: React.FC = () => {
               <Select
                 value={formState.data.yearsInOperation}
                 label="Years in Operation"
-                onChange={(e) => handleInputChange("yearsInOperation")(e)}
+                onChange={(e) => handleTextFieldChange("yearsInOperation")(e)}
               >
                 {staticData.yearsOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
@@ -430,7 +425,7 @@ const BusinessValuationForm: React.FC = () => {
               type="number"
               label="Monthly Customers"
               value={formState.data.monthlyCustomers}
-              onChange={handleInputChange("monthlyCustomers")}
+              onChange={handleTextFieldChange("monthlyCustomers")}
             />
           </QuestionCard>
 
@@ -444,7 +439,7 @@ const BusinessValuationForm: React.FC = () => {
               <Select
                 value={formState.data.employees}
                 label="Number of Employees"
-                onChange={(e) => handleInputChange("employees")(e)}
+                onChange={(e) => handleTextFieldChange("employees")(e)}
               >
                 {staticData.employeeOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
@@ -465,7 +460,7 @@ const BusinessValuationForm: React.FC = () => {
               type="number"
               label="Social Media Followers"
               value={formState.data.socialFollowers}
-              onChange={handleInputChange("socialFollowers")}
+              onChange={handleTextFieldChange("socialFollowers")}
             />
           </QuestionCard>
 
@@ -479,7 +474,7 @@ const BusinessValuationForm: React.FC = () => {
               <Select
                 value={formState.data.revenueTrend}
                 label="Revenue Trend"
-                onChange={(e) => handleInputChange("revenueTrend")(e)}
+                onChange={(e) => handleTextFieldChange("revenueTrend")(e)}
               >
                 {staticData.trendOptions.map((option) => (
                   <MenuItem key={option} value={option.toLowerCase()}>
@@ -514,6 +509,7 @@ const BusinessValuationForm: React.FC = () => {
           )}
         </Box>
       </div>
+      </ThemeProvider>
       <SubmitButton loading={formState.loading} onClick={handleSubmit} />
       <ValuationPageFooter />
     </>
