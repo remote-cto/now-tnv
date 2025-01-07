@@ -85,25 +85,49 @@ export async function POST(request: Request) {
           },
         ],
       });
-
+  
       return NextResponse.json({
         content: valuationResult,
         message: 'Valuation report has been sent to your email',
         id: savedValuation._id,
       });
-    } catch (pdfError) {
-      console.error('PDF/Email Error:', pdfError);
+  
+    } catch (error: unknown) {
+      console.error('PDF/Email Error:', error);
       
-      return NextResponse.json({
-        content: valuationResult,
-        message: 'Valuation result available but PDF generation failed. Please try again later.',
-        id: savedValuation._id,
-      }, { status: 207 });
+      // Type guard to check if error is an Error object
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      
+      // Fallback to text-only email
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: email,
+        subject: `Business Valuation Report - ${companyName}`,
+        html: `
+          <h1>Your Business Valuation Report</h1>
+          <p>Dear ${companyName},</p>
+          <p>Here is your valuation result:</p>
+          <pre>${valuationResult}</pre>
+          <p>We apologize for any inconvenience, but we encountered an error generating the PDF version.</p>
+          <br>
+          <p>Best regards,</p>
+          <p>Your Business Valuation Team</p>
+        `
+      });
+  
+      return NextResponse.json(
+        { error: 'Failed to process valuation request', content: valuationResult },
+        { status: 500 }
+      );
     }
-  } catch (error) {
-    console.error('API Error:', error);
+  } catch (error: unknown) {
+    console.error('Route Error:', error);
+    
+    // Type guard to check if error is an Error object
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    
     return NextResponse.json(
-      { error: 'Failed to process valuation request' },
+      { error: 'Failed to process request', message: errorMessage },
       { status: 500 }
     );
   }
