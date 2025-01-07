@@ -13,7 +13,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200 ">
+    <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200">
       <div className="flex items-center">
         <div 
           className="text-xl lg:text-4xl font-extrabold relative group cursor-pointer"
@@ -23,7 +23,6 @@ const Header = () => {
           <span className="bg-black bg-clip-text text-transparent">
             The.Now.Company.
           </span>
-          <div className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 ${isHovered === "logo" ? "w-full" : "w-0"}`} />
         </div>
       </div>
 
