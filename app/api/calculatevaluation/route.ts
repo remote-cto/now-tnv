@@ -1,3 +1,4 @@
+// app/api/calculatevaluation/route.ts
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import nodemailer from 'nodemailer';
@@ -11,8 +12,8 @@ const openai = new OpenAI({
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: 587,
-  secure: false,
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_SECURE === 'true',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -22,11 +23,11 @@ const transporter = nodemailer.createTransport({
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    
+
     const body = await request.json();
     const { email, companyName } = body.formData;
     const formContent = body.messages[1].content;
-    
+
     // Get GPT response
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -40,9 +41,8 @@ export async function POST(request: Request) {
     if (!content) {
       throw new Error('No valuation result received from OpenAI');
     }
-
     const valuationResult: string = content;
-    
+
     // Store in MongoDB
     const valuationData = {
       companyName,
@@ -53,7 +53,6 @@ export async function POST(request: Request) {
     };
 
     const savedValuation = await Valuation.create(valuationData);
-
     try {
       // Generate PDF with the new generator
       const pdfBuffer = await generateValuationPDF({
@@ -84,49 +83,25 @@ export async function POST(request: Request) {
           },
         ],
       });
-  
+
       return NextResponse.json({
         content: valuationResult,
         message: 'Valuation report has been sent to your email',
         id: savedValuation._id,
       });
-  
-    } catch (error: unknown) {
-      console.error('PDF/Email Error:', error);
+    } catch (pdfError) {
+      console.error('PDF/Email Error:', pdfError);
       
-      // Type guard to check if error is an Error object
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      
-      // Fallback to text-only email
-      await transporter.sendMail({
-        from: process.env.SMTP_FROM,
-        to: email,
-        subject: `Business Valuation Report - ${companyName}`,
-        html: `
-          <h1>Your Business Valuation Report</h1>
-          <p>Dear ${companyName},</p>
-          <p>Here is your valuation result:</p>
-          <pre>${valuationResult}</pre>
-          <p>We apologize for any inconvenience, but we encountered an error generating the PDF version.</p>
-          <br>
-          <p>Best regards,</p>
-          <p>Your Business Valuation Team</p>
-        `
-      });
-  
-      return NextResponse.json(
-        { error: 'Failed to process valuation request', content: valuationResult },
-        { status: 500 }
-      );
+      return NextResponse.json({
+        content: valuationResult,
+        message: 'Valuation result available but PDF generation failed. Please try again later.',
+        id: savedValuation._id,
+      }, { status: 207 });
     }
-  } catch (error: unknown) {
-    console.error('Route Error:', error);
-    
-    // Type guard to check if error is an Error object
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    
+  } catch (error) {
+    console.error('API Error:', error);
     return NextResponse.json(
-      { error: 'Failed to process request', message: errorMessage },
+      { error: 'Failed to process valuation request' },
       { status: 500 }
     );
   }
