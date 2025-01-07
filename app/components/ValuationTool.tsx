@@ -21,13 +21,13 @@ const ValuationTool = () => {
               </span>
             </h2>
 
-            <div className="transform transition-all duration-500 hover:scale-105">
-              <p className="text-lg text-white/90 sm:text-xl mb-4">
+            <div>
+              <p className="text-lg text-white/90 sm:text-xl mb-4 font-['Helvetica']">
                 Flippa uses your inputs and compares data to thousands of
                 similar sites that have sold on Flippa. We analyze business
                 model, category, age, and other factors.
               </p>
-              <p className="text-lg text-white/90 sm:text-xl mb-4">
+              <p className="text-lg text-white/90 sm:text-xl mb-4 font-['Helvetica']">
                 We also consider how many buyers are interested in sites like
                 yours.
               </p>
