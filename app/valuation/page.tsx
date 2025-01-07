@@ -37,6 +37,18 @@ const theme = createTheme({
             '&:hover fieldset': {
               borderColor: 'black',
             },
+            '& input[type=number]': {
+              MozAppearance: 'textfield',
+              '&::-webkit-outer-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
+              },
+              '&::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
+              },
+            },
+
           },
         },
       },
