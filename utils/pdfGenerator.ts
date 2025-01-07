@@ -49,28 +49,28 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
       yPos += splitValuation.length * 7;
       
       // Business Details
-      const businessDetails = extractBusinessDetails(data.formData);
-      if (Object.keys(businessDetails).length > 0) {
-        yPos += 10;
-        doc.setFontSize(16);
-        doc.text('Business Details', margin, yPos);
+      // const businessDetails = extractBusinessDetails(data.formData);
+      // if (Object.keys(businessDetails).length > 0) {
+      //   yPos += 10;
+      //   doc.setFontSize(16);
+      //   doc.text('Business Details', margin, yPos);
         
-        yPos += 10;
-        doc.setFontSize(12);
-        Object.entries(businessDetails).forEach(([key, value]) => {
-          const text = `${formatKey(key)}: ${formatValue(key, value)}`;
-          const splitText = doc.splitTextToSize(text, pageWidth - 2 * margin);
+      //   yPos += 10;
+      //   doc.setFontSize(12);
+      //   Object.entries(businessDetails).forEach(([key, value]) => {
+      //     const text = `${formatKey(key)}: ${formatValue(key, value)}`;
+      //     const splitText = doc.splitTextToSize(text, pageWidth - 2 * margin);
           
-          // Check if we need a new page
-          if (yPos + splitText.length * 7 > doc.internal.pageSize.getHeight() - 30) {
-            doc.addPage();
-            yPos = 20;
-          }
+      //     // Check if we need a new page
+      //     if (yPos + splitText.length * 7 > doc.internal.pageSize.getHeight() - 30) {
+      //       doc.addPage();
+      //       yPos = 20;
+      //     }
           
-          doc.text(splitText, margin, yPos);
-          yPos += splitText.length * 7;
-        });
-      }
+      //     doc.text(splitText, margin, yPos);
+      //     yPos += splitText.length * 7;
+      //   });
+      // }
       
       // Footer
       const footerText = 'This valuation report is based on the information provided and should be used for reference purposes only.';
