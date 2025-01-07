@@ -61,7 +61,7 @@ const WorkingValuationTool = () => {
         <h1 className="text-3xl lg:text-5xl font-extrabold mb-4">
           HOW DOES THE VALUATION TOOL WORK?
         </h1>
-        <p className="text-gray-800 text-2xl">
+        <p className="text-black text-2xl font-semibold font-['Helvetica']">
           We provide them with more choice and absolute transparency.
         </p>
       </motion.div>
@@ -99,7 +99,7 @@ const WorkingValuationTool = () => {
               {section.description.map((paragraph, pIndex) => (
                 <motion.p
                   key={pIndex}
-                  className="text-gray-700 mb-3 text-xl"
+                  className="text-black mb-3 text-xl font-['Helvetica'] font-semibold"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: pIndex * 0.2 }}

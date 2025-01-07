@@ -23,12 +23,12 @@ const ValuationQuestionAnswer = () => {
             </h2>
 
             <div className="transform transition-all duration-500 hover:scale-105">
-              <p className="text-lg text-black/90 sm:text-xl mb-4">
+              <p className="text-lg text-black/90 sm:text-xl mb-4 font-semibold ">
                 TNV uses your inputs and compares data to thousands of similar
                 sites that have sold on TNV. We analyze business model,
                 category, age and other factors.
               </p>
-              <p className="text-lg text-black/90 sm:text-xl mb-4">
+              <p className="text-lg text-black/90 sm:text-xl mb-4 font-semibold ">
                 We also consider how many buyers are interested in sites like
                 yours.
               </p>

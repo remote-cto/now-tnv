@@ -20,7 +20,7 @@ const Header = () => {
           onMouseEnter={() => setIsHovered("logo")}
           onMouseLeave={() => setIsHovered("")}
         >
-          <span className="bg-black bg-clip-text text-transparent">
+          <span className="bg-black bg-clip-text text-transparent ">
             The.Now.Company.
           </span>
         </div>
