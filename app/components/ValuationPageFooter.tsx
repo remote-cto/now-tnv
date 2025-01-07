@@ -9,7 +9,7 @@ const ValuationPageFooter: React.FC = () => {
         The.Now.Company.
       </div>
       
-      <div className=" text-xs lg:text-xl text-white">
+      <div className=" text-xs lg:text-base text-white font-semibold font-['Helvetica']">
         © {currentYear} The.Now.Company. All rights reserved.
       </div>
     </footer>
