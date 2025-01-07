@@ -99,7 +99,7 @@ const WorkingValuationTool = () => {
               {section.description.map((paragraph, pIndex) => (
                 <motion.p
                   key={pIndex}
-                  className="text-black mb-3 text-xl font-['Helvetica'] font-semibold"
+                  className="text-black mb-3 text-xl font-['Helvetica'] "
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: pIndex * 0.2 }}
