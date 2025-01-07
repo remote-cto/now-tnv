@@ -10,14 +10,13 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+// Create reusable transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
+  service: 'gmail',  // Using Gmail service instead of custom SMTP
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD  // Use App Password for Gmail
+  }
 });
 
 export async function POST(request: Request) {
@@ -53,8 +52,9 @@ export async function POST(request: Request) {
     };
 
     const savedValuation = await Valuation.create(valuationData);
+
     try {
-      // Generate PDF with the new generator
+      // Generate PDF
       const pdfBuffer = await generateValuationPDF({
         companyName,
         valuationResult,
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 
       // Send email with PDF attachment
       await transporter.sendMail({
-        from: process.env.SMTP_FROM,
+        from: process.env.GMAIL_USER,
         to: email,
         subject: `Business Valuation Report - ${companyName}`,
         html: `
@@ -89,12 +89,13 @@ export async function POST(request: Request) {
         message: 'Valuation report has been sent to your email',
         id: savedValuation._id,
       });
-    } catch (pdfError) {
-      console.error('PDF/Email Error:', pdfError);
+    } catch (error) {
+      console.error('PDF/Email Error:', error);
       
+      // Return partial success if PDF generation or email sending fails
       return NextResponse.json({
         content: valuationResult,
-        message: 'Valuation result available but PDF generation failed. Please try again later.',
+        message: 'Valuation result available but PDF delivery failed. Please try again later.',
         id: savedValuation._id,
       }, { status: 207 });
     }
