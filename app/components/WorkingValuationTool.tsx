@@ -44,7 +44,7 @@ const WorkingValuationTool = () => {
     {
       title: "Trust & Safety by Design",
       description: [
-        "Flippa's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.",
+        "TNV's marketplace integrity team plus sophisticated fraud prevention tools are in place to protect both buyer and seller.",
       ],
       imageSrc: "/images/TRUSTED.svg",
     },

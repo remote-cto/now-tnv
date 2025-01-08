@@ -23,8 +23,8 @@ const ValuationTool = () => {
 
             <div>
               <p className="text-lg text-white/90 sm:text-xl mb-4 font-['Helvetica']">
-                Flippa uses your inputs and compares data to thousands of
-                similar sites that have sold on Flippa. We analyze business
+                TNV uses your inputs and compares data to thousands of
+                similar sites that have sold on TNV. We analyze business
                 model, category, age, and other factors.
               </p>
               <p className="text-lg text-white/90 sm:text-xl mb-4 font-['Helvetica']">
