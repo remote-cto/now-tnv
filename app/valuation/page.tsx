@@ -509,7 +509,7 @@ const BusinessValuationForm: React.FC = () => {
             </Alert>
           )}
 
-          {formState.result && (
+          {/* {formState.result && (
             <Paper sx={{ mt: 2, p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Valuation Result
@@ -518,7 +518,7 @@ const BusinessValuationForm: React.FC = () => {
                 {formState.result}
               </Typography>
             </Paper>
-          )}
+          )} */}
         </Box>
       </div>
       </ThemeProvider>

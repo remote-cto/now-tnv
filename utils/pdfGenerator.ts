@@ -17,6 +17,9 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         format: 'a4'
       });
 
+      // Set default bold font
+      doc.setFont('helvetica', 'bold');
+
       // Set initial position
       let yPos = 20;
       const margin = 20;
@@ -48,29 +51,8 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
       doc.text(splitValuation, margin, yPos);
       yPos += splitValuation.length * 7;
       
-      // Business Details
-      // const businessDetails = extractBusinessDetails(data.formData);
-      // if (Object.keys(businessDetails).length > 0) {
-      //   yPos += 10;
-      //   doc.setFontSize(16);
-      //   doc.text('Business Details', margin, yPos);
-        
-      //   yPos += 10;
-      //   doc.setFontSize(12);
-      //   Object.entries(businessDetails).forEach(([key, value]) => {
-      //     const text = `${formatKey(key)}: ${formatValue(key, value)}`;
-      //     const splitText = doc.splitTextToSize(text, pageWidth - 2 * margin);
-          
-      //     // Check if we need a new page
-      //     if (yPos + splitText.length * 7 > doc.internal.pageSize.getHeight() - 30) {
-      //       doc.addPage();
-      //       yPos = 20;
-      //     }
-          
-      //     doc.text(splitText, margin, yPos);
-      //     yPos += splitText.length * 7;
-      //   });
-      // }
+      // Business Details section is commented out in original code
+      // but if uncommented, it will inherit the bold font setting
       
       // Footer
       const footerText = 'This valuation report is based on the information provided and should be used for reference purposes only.';
