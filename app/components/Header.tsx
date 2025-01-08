@@ -8,7 +8,7 @@ const Header = () => {
   const socialLinks = [
     { icon: Twitter, href: "https://twitter.com/yourcompany", name: "twitter" },
     { icon: Facebook, href: "https://facebook.com/yourcompany", name: "facebook" },
-    { icon: Instagram, href: "https://instagram.com/yourcompany", name: "instagram" },
+    { icon: Instagram, href: "https://www.instagram.com/thenow.company/", name: "instagram" },
     { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" }
   ];
 
