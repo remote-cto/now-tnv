@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
+import Link from "next/link";
 
 const Header = () => {
   const [isHovered, setIsHovered] = useState("");
@@ -14,20 +15,22 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200">
       <div className="flex items-center">
-        <div 
-          className="text-xl lg:text-5xl font-extrabold relative group cursor-pointer"
-          onMouseEnter={() => setIsHovered("logo")}
-          onMouseLeave={() => setIsHovered("")}
-        >
-          <span className="bg-black bg-clip-text text-transparent font-['Helvetica'] font-extrabold">
-            The
-            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
-            Now
-            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
-            Company
-            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
-          </span>
-        </div>
+        <Link href="/">
+          <div
+            className="text-xl lg:text-5xl font-extrabold relative group cursor-pointer"
+            onMouseEnter={() => setIsHovered("logo")}
+            onMouseLeave={() => setIsHovered("")}
+          >
+            <span className="bg-black bg-clip-text text-transparent font-['Helvetica'] font-extrabold">
+              The
+              <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
+              Now
+              <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
+              Company
+              <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
+            </span>
+          </div>
+        </Link>
       </div>
       <div className="flex items-center space-x-1 lg:space-x-4">
         {socialLinks.map(({ icon: Icon, href, name }) => (
@@ -42,8 +45,8 @@ const Header = () => {
             onMouseEnter={() => setIsHovered(name)}
             onMouseLeave={() => setIsHovered("")}
           >
-            <Icon 
-              size={20} 
+            <Icon
+              size={20}
               className={`text-white transition-all duration-300 ${
                 isHovered === name ? "animate-pulse" : ""
               }`}
