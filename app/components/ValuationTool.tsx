@@ -15,7 +15,7 @@ const ValuationTool = () => {
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in font-['Helvetica']">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in ">
               <span className="bg-clip-text text-white">
                 The.Now.Valuation.Tool
               </span>

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
 
 const Header = () => {
   const [isHovered, setIsHovered] = useState("");
-  
+
   const socialLinks = [
     { icon: Facebook, href: "https://facebook.com/yourcompany", name: "facebook" },
     { icon: Instagram, href: "https://www.instagram.com/thenow.company/", name: "instagram" },
-    { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" }
+    { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" },
   ];
 
   return (
@@ -21,11 +21,11 @@ const Header = () => {
         >
           <span className="bg-black bg-clip-text text-transparent font-['Helvetica'] font-extrabold">
             The
-            <span className="font-['Arial']">.</span>
+            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
             Now
-            <span className="font-['Arial']">.</span>
+            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
             Company
-            <span className="font-['Arial']">.</span>
+            <span className="inline-block mx-1 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full"></span>
           </span>
         </div>
       </div>
