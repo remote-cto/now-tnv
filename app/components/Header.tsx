@@ -4,9 +4,8 @@ import { Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
 
 const Header = () => {
   const [isHovered, setIsHovered] = useState("");
-
+  
   const socialLinks = [
-    // { icon: Twitter, href: "https://twitter.com/yourcompany", name: "twitter" },
     { icon: Facebook, href: "https://facebook.com/yourcompany", name: "facebook" },
     { icon: Instagram, href: "https://www.instagram.com/thenow.company/", name: "instagram" },
     { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" }
@@ -21,11 +20,15 @@ const Header = () => {
           onMouseLeave={() => setIsHovered("")}
         >
           <span className="bg-black bg-clip-text text-transparent font-['Helvetica'] font-extrabold">
-            The.Now.Company.
+            The
+            <span className="font-['Arial']">.</span>
+            Now
+            <span className="font-['Arial']">.</span>
+            Company
+            <span className="font-['Arial']">.</span>
           </span>
         </div>
       </div>
-
       <div className="flex items-center space-x-1 lg:space-x-4">
         {socialLinks.map(({ icon: Icon, href, name }) => (
           <a
