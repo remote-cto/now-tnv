@@ -4,7 +4,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full py-4 px-6 flex justify-between items-center border-t border-gray-200 mb-1">
+    <footer className="w-full py-4 px-6 flex justify-between items-center border-t border-gray-200 mb-1 font-['Helvetica'] ">
       <div className=" text-base lg:text-4xl font-extrabold ">
         The.Now.Company.
       </div>

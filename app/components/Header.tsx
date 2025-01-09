@@ -6,7 +6,7 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState("");
 
   const socialLinks = [
-    { icon: Twitter, href: "https://twitter.com/yourcompany", name: "twitter" },
+    // { icon: Twitter, href: "https://twitter.com/yourcompany", name: "twitter" },
     { icon: Facebook, href: "https://facebook.com/yourcompany", name: "facebook" },
     { icon: Instagram, href: "https://www.instagram.com/thenow.company/", name: "instagram" },
     { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" }
@@ -16,7 +16,7 @@ const Header = () => {
     <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200">
       <div className="flex items-center">
         <div 
-          className="text-xl lg:text-4xl font-extrabold relative group cursor-pointer"
+          className="text-xl lg:text-5xl font-extrabold relative group cursor-pointer"
           onMouseEnter={() => setIsHovered("logo")}
           onMouseLeave={() => setIsHovered("")}
         >

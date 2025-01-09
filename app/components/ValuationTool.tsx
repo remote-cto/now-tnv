@@ -15,9 +15,14 @@ const ValuationTool = () => {
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in font-['Helvetica']">
               <span className="bg-clip-text text-white">
                 The.Now.Valuation.Tool
+              </span>
+            </h2>
+            <h2 className="text-xl md:text-3xl font-extrabold text-white mb-4 animate-fade-in font-['Helvetica']">
+              <span className="bg-clip-text text-white">
+                Start With some key details
               </span>
             </h2>
 
@@ -36,7 +41,7 @@ const ValuationTool = () => {
             <div className="flex flex-col items-center lg:items-start mt-7 mb-8 lg:mb-2">
               <Link href="/valuation">
                 <button
-                  className="relative overflow-hidden bg-white text-black px-7 py-3 rounded-full font-extrabold text-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
+                  className="relative overflow-hidden bg-white text-black px-7 py-3 rounded-full font-extrabold font-['Helvetica'] text-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                 >

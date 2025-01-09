@@ -284,7 +284,7 @@ const BusinessValuationForm: React.FC = () => {
       <NowValuationTool />
       <ValuationQuestionAnswer />
       <ThemeProvider theme={theme}>
-      <div className="bg-black">
+      <div className="bg-black font-['Helvetica']">
         <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
           <QuestionCard
             number="*"
