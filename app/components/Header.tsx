@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
 
@@ -21,7 +21,20 @@ const Header = () => {
           onMouseLeave={() => setIsHovered("")}
         >
           <span className="bg-black bg-clip-text text-transparent font-['Helvetica'] font-extrabold">
-            The.Now.Company.
+            The.Now
+            <span 
+              className="font-sans rounded-full text-black bg-transparent"
+              style={{
+                display: "inline-block",
+                width: "1ch", // Adjust size for the round dot
+                height: "1ch",
+                borderRadius: "50%",
+                backgroundColor: "currentColor"
+              }}
+            >
+              .
+            </span>
+            Company.
           </span>
         </div>
       </div>
