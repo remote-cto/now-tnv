@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx puppeteer browsers install chrome-headless-shell && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,7 +17,6 @@
     "class-variance-authority": "^0.7.1",
     "embla-carousel-react": "^8.5.1",
     "framer-motion": "^11.15.0",
-    "html-pdf-node": "^1.0.8",
     "jspdf": "^2.5.2",
     "lucide-react": "^0.469.0",
     "mongoose": "^8.9.3",
@@ -25,7 +24,6 @@
     "nodemailer": "^6.9.16",
     "openai": "^4.77.0",
     "pdfkit": "^0.16.0",
-    "puppeteer": "^23.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
