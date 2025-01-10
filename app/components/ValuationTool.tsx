@@ -71,7 +71,7 @@ const ValuationTool = () => {
               }}
             >
               <Image
-                src="/images/GROUP.svg"
+                src="/images/Group.png"
                 width={400}
                 height={400}
                 alt="Image Description"
