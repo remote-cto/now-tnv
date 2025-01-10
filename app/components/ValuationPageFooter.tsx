@@ -14,7 +14,7 @@ const ValuationPageFooter: React.FC = () => {
         <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
       </div>
 
-      <div className="text-xs lg:text-base text-white font-semibold font-['Helvetica']">
+      <div className="text-xs lg:text-base text-white font-semibold font-['helveticanowtext-black-demo]">
         © {currentYear} The.Now.Company. All rights reserved.
       </div>
     </footer>

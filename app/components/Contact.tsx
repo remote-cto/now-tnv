@@ -11,20 +11,20 @@ const Contact: React.FC = () => {
 
         {/* Main text */}
         <div className="space-y-4">
-          <p className="text-2xl font-['Helvetica'] ">
+          <p className="text-2xl font-['helveticanowtext-black-demo]">
             We understand that buying or selling a digital business isn't easy.
           </p>
-          <p className="text-2xl font-['Helvetica']">
+          <p className="text-2xl font-['helveticanowtext-black-demo]">
             If you have any questions or require assistance, feel free to contact us anytime.
           </p>
         </div>
 
         {/* Contact Information */}
         <div className="space-y-4 mt-12">
-          <p className="text-xl font-['Helvetica']">
+          <p className="text-xl font-['helveticanowtext-black-demo]">
             email: xxyxyxyx@tnv.com
           </p>
-          <p className="text-xl font-['Helvetica']">
+          <p className="text-xl font-['helveticanowtext-black-demo]">
             customer support: +00000 0000 0000
           </p>
         </div>
