@@ -18,12 +18,12 @@ const ValuationTool = () => {
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
               <span className="bg-black bg-clip-text text-transparent font-['helveticanowtext-black-demo] text-white">
                 The
-                <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+                <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
                 Now
-                <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+                <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
                 Valution
               </span>
-              <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
               Tool
             </h2>
             <h2 className="text-xl md:text-3xl  text-white mb-4 animate-fade-in font-['helveticanowtext-black-demo] font-extrabold">
