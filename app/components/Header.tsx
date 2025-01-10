@@ -23,11 +23,11 @@ const Header = () => {
           >
             <span className="bg-black bg-clip-text text-transparent font-['helveticanowtext-black-demo]">
               The
-              <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
               Now
-              <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
               Company
-              <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
             </span>
           </div>
         </Link>
