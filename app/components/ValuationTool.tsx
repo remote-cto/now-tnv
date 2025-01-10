@@ -16,11 +16,17 @@ const ValuationTool = () => {
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
-              <span className="bg-clip-text text-white">
-                The.Now.Valuation.Tool
+              <span className="bg-black bg-clip-text text-transparent font-['helveticanowtext-black-demo] text-white">
+                The
+                <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+                Now
+                <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+                Valution
               </span>
+              <span className="inline-block mx-1 w-1 h-1 lg:w-3 lg:h-3 bg-white rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              Tool
             </h2>
-            <h2 className="text-xl md:text-3xl  text-white mb-4 animate-fade-in font-['helveticanowtext-black-demo]">
+            <h2 className="text-xl md:text-3xl  text-white mb-4 animate-fade-in font-['helveticanowtext-black-demo] font-extrabold">
               <span className="bg-clip-text text-white">
                 Start With some key details
               </span>
@@ -28,9 +34,9 @@ const ValuationTool = () => {
 
             <div>
               <p className="text-lg text-white/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo]">
-                TNV uses your inputs and compares data to thousands of
-                similar sites that have sold on TNV. We analyze business
-                model, category, age, and other factors.
+                TNV uses your inputs and compares data to thousands of similar
+                sites that have sold on TNV. We analyze business model,
+                category, age, and other factors.
               </p>
               <p className="text-lg text-white/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo]">
                 We also consider how many buyers are interested in sites like

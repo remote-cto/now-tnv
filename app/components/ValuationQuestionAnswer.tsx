@@ -15,7 +15,7 @@ const ValuationQuestionAnswer = () => {
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
-            <h2 className="text-3xl md:text-6xl font-extrabold text-black mb-6 animate-fade-in font-['Helvetica']">
+            <h2 className="text-3xl md:text-6xl font-extrabold text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
               Valuation Questions & Answers
             </h2>
             <h2 className="text-2xl md:text-4xl font-extrabold text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
