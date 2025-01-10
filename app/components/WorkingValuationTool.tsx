@@ -58,7 +58,7 @@ const WorkingValuationTool = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 font-['Helvetica'] ">
+        <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 font-['helveticanowtext-black-demo]">
           HOW DOES THE VALUATION TOOL WORK?
         </h1>
         <p className="text-black text-2xl font-semibold font-['Helvetica']">
@@ -120,7 +120,7 @@ const WorkingValuationTool = () => {
       >
         <Link href="/valuation">
           <motion.button
-            className="bg-black text-white px-10 py-4 rounded-full font-extrabold text-xl lg:text-3xl shadow-xl font-['Helvetica']"
+            className="bg-black text-white px-10 py-4 rounded-full font-extrabold text-xl lg:text-3xl shadow-xl font-['helveticanowtext-black-demo]"
             whileHover={{ scale: 1.05, backgroundColor: "#333" }}
             whileTap={{ scale: 0.95 }}
           >

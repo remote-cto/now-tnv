@@ -18,7 +18,7 @@ const ValuationQuestionAnswer = () => {
             <h2 className="text-3xl md:text-6xl font-extrabold text-black mb-6 animate-fade-in font-['Helvetica']">
               Valuation Questions & Answers
             </h2>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-black mb-6 animate-fade-in font-['Helvetica'] ">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
               Start with some key details
             </h2>
 

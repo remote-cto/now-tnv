@@ -117,7 +117,7 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(({
   children,
 }) => (
   <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
-    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 2 , }}>
       <Typography variant="h6" sx={{ mr: 1 }}>
         {number}. {question}
       </Typography>
@@ -284,7 +284,7 @@ const BusinessValuationForm: React.FC = () => {
       <NowValuationTool />
       <ValuationQuestionAnswer />
       <ThemeProvider theme={theme}>
-      <div className="bg-black font-['Helvetica']">
+      <div className="bg-black font-['helveticanowtext-black-demo]">
         <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
           <QuestionCard
             number="*"

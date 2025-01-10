@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+    font-family: 'helveticanowtext-black-demo';
+    src: url('/font/helveticanowtext-black-demo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Uniform_Rounded_Condensed_Black';
+    src: url('/font/Uniform Rounded Condensed Black_0.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
