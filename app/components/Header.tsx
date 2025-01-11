@@ -17,7 +17,7 @@ const Header = () => {
       <div className="flex items-center">
         <Link href="/">
           <div
-            className="text-xl lg:text-5xl font-extrabold relative group cursor-pointer"
+            className="text-2xl lg:text-5xl font-extrabold relative group cursor-pointer"
             onMouseEnter={() => setIsHovered("logo")}
             onMouseLeave={() => setIsHovered("")}
           >
