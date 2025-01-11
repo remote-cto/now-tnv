@@ -6,10 +6,12 @@ import Contact from "./components/Contact";
 import ScrollToTop from "./components/ScrollToTop"; 
 import Footer from "./components/Footer";
 import WorkingValuationTool from "./components/WorkingValuationTool";
+import LoadingAnimation from "./components/LoadingAnimation";
 
 export default function Home() {
   return (
     <div>
+      <LoadingAnimation/>
       <Header />
       <ValuationTool />
       <WorkingValuationTool/>
