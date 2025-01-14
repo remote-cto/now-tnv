@@ -204,53 +204,23 @@ const BusinessValuationForm: React.FC = () => {
 
   const handleSubmit = useCallback(async (): Promise<void> => {
     if (!validateForm()) return;
-
+  
     setFormState((prev) => ({
       ...prev,
       loading: true,
       error: null,
       result: null,
     }));
-
+  
     try {
-      const apiData = {
-        annual_revenue: parseFloat(formState.data.revenue) || 0,
-        net_income: formState.data.netIncome
-          ? parseFloat(formState.data.netIncome)
-          : null,
-        industry: formState.data.industry || "other",
-        assets: parseFloat(formState.data.assets) || 0,
-        liabilities: parseFloat(formState.data.liabilities) || 0,
-        years_in_operation: formState.data.yearsInOperation || "less than 1 year",
-        customers_last_month: parseInt(formState.data.monthlyCustomers) || 0,
-        employees: formState.data.employees || "none",
-        social_media_followers: parseInt(formState.data.socialFollowers) || 0,
-        revenue_trend: formState.data.revenueTrend || "stable",
-      };
-
       const response = await fetch("/api/calculatevaluation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "system",
-              content: "You are a business valuation expert. Calculate valuations based on the provided data using these rules:\n1. Core Business Valuation = (Net Income × Industry Multiple) + Assets - Liabilities\n2. Social Media Brand Value = Followers × Value Per Follower\n3. Apply stability and growth adjustments",
-            },
-            {
-              role: "user",
-              content: `Please calculate a business valuation based on the following data:\n${JSON.stringify(apiData, null, 2)}\n\nUse conservative assumptions for valuation multiples (1–3x net income) and follower value ($0.10 per follower by default). If net income is missing, assume 10% of revenue. Output the valuation and a brief explanation.`,
-            },
-          ],
-          formData: {
-            email: formState.data.email,
-            companyName: formState.data.companyName,
-          },
-        }),
+        body: JSON.stringify({ formData: formState.data }),
       });
-
+  
       if (!response.ok) throw new Error("Failed to calculate valuation");
-
+  
       const data = await response.json();
       setFormState((prev) => ({
         ...prev,

@@ -1,21 +1,15 @@
-// app/api/calculatevaluation/route.ts
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 import nodemailer from 'nodemailer';
 import { generateValuationPDF } from '../../../utils/pdfGenerator';
 import dbConnect from '../../lib/mongodb';
 import Valuation from '../../models/Valuation';
+import { calculateBusinessValuation } from '../../../utils/valuationCalculator';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-// Create reusable transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail',  // Using Gmail service instead of custom SMTP
+  service: 'gmail',
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD  // Use App Password for Gmail
+    pass: process.env.GMAIL_APP_PASSWORD
   }
 });
 
@@ -23,42 +17,43 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
 
-    const body = await request.json();
-    const { email, companyName } = body.formData;
-    const formContent = body.messages[1].content;
+    const { formData } = await request.json();
+    const { email, companyName, ...valuationData } = formData;
 
-    // Get GPT response
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: body.messages,
-      temperature: 0.7,
-      max_tokens: 500,
-    });
+    // Convert string values to numbers where needed
+    const processedData = {
+      annual_revenue: parseFloat(valuationData.revenue) || 0,
+      net_income: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
+      industry: valuationData.industry || "other",
+      assets: parseFloat(valuationData.assets) || 0,
+      liabilities: parseFloat(valuationData.liabilities) || 0,
+      years_in_operation: valuationData.yearsInOperation || "less than 1 year",
+      customers_last_month: parseInt(valuationData.monthlyCustomers) || 0,
+      employees: valuationData.employees || "none",
+      social_media_followers: parseInt(valuationData.socialFollowers) || 0,
+      revenue_trend: valuationData.revenueTrend || "stable"
+    };
 
-    const content = completion.choices[0].message.content;
-    
-    if (!content) {
-      throw new Error('No valuation result received from OpenAI');
-    }
-    const valuationResult: string = content;
+    // Calculate valuation using our formula-based calculator
+    const valuationResult = calculateBusinessValuation(processedData);
 
     // Store in MongoDB
-    const valuationData = {
+    const valuationRecord = {
       companyName,
       email,
-      formData: formContent,
-      valuationResult,
+      formData: processedData,
+      valuationResult: valuationResult.explanation,
       timestamp: new Date(),
     };
 
-    const savedValuation = await Valuation.create(valuationData);
+    const savedValuation = await Valuation.create(valuationRecord);
 
     try {
       // Generate PDF
       const pdfBuffer = await generateValuationPDF({
         companyName,
-        valuationResult,
-        formData: formContent,
+        valuationResult: valuationResult.explanation,
+        formData: JSON.stringify(processedData, null, 2),
       });
 
       // Send email with PDF attachment
@@ -70,7 +65,7 @@ export async function POST(request: Request) {
           <h1>Your Business Valuation Report</h1>
           <p>Dear ${companyName},</p>
           <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
-          <p>If you have any questions about your valuation, please don't hesitate to contact us.</p>
+          <p>Final Valuation: $${valuationResult.totalValuation.toLocaleString()}</p>
           <br>
           <p>Best regards,</p>
           <p>Your Business Valuation Team</p>
@@ -85,16 +80,15 @@ export async function POST(request: Request) {
       });
 
       return NextResponse.json({
-        content: valuationResult,
+        content: valuationResult.explanation,
         message: 'Valuation report has been sent to your email',
         id: savedValuation._id,
       });
     } catch (error) {
       console.error('PDF/Email Error:', error);
       
-      // Return partial success if PDF generation or email sending fails
       return NextResponse.json({
-        content: valuationResult,
+        content: valuationResult.explanation,
         message: 'Valuation result available but PDF delivery failed. Please try again later.',
         id: savedValuation._id,
       }, { status: 207 });
