@@ -1,3 +1,5 @@
+// pages/api/valuation/route.ts
+
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { generateValuationPDF } from '../../../utils/pdfGenerator';
@@ -20,21 +22,19 @@ export async function POST(request: Request) {
     const { formData } = await request.json();
     const { email, companyName, ...valuationData } = formData;
 
-    // Convert string values to numbers where needed
+    // Convert and map form data to new valuation format
     const processedData = {
-      annual_revenue: parseFloat(valuationData.revenue) || 0,
-      net_income: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
+      rev: parseFloat(valuationData.revenue) || 0,
+      inc: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
       industry: valuationData.industry || "other",
-      assets: parseFloat(valuationData.assets) || 0,
-      liabilities: parseFloat(valuationData.liabilities) || 0,
-      years_in_operation: valuationData.yearsInOperation || "less than 1 year",
-      customers_last_month: parseInt(valuationData.monthlyCustomers) || 0,
-      employees: valuationData.employees || "none",
-      social_media_followers: parseInt(valuationData.socialFollowers) || 0,
-      revenue_trend: valuationData.revenueTrend || "stable"
+      asset: parseFloat(valuationData.assets) || 0,
+      lia: parseFloat(valuationData.liabilities) || 0,
+      op_year: valuationData.yearsInOperation || "less than 1 year",
+      sm: parseInt(valuationData.socialFollowers) || 1,
+      trend: valuationData.revenueTrend || "stable"
     };
 
-    // Calculate valuation using our formula-based calculator
+    // Calculate valuation using updated formula
     const valuationResult = calculateBusinessValuation(processedData);
 
     // Store in MongoDB

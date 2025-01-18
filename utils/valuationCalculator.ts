@@ -1,108 +1,108 @@
 // utils/valuationCalculator.ts
 
 interface ValuationData {
-    annual_revenue: number;
-    net_income: number | null;
-    industry: string;
-    assets: number;
-    liabilities: number;
-    years_in_operation: string;
-    customers_last_month: number;
-    employees: string;
-    social_media_followers: number;
-    revenue_trend: string;
-  }
+  rev: number;                    // Revenue
+  inc?: number | null;            // Income (optional)
+  industry: string;
+  asset: number;                  // Total Assets
+  lia: number;                    // Total Liabilities
+  op_year: string;               // Years in Operation
+  sm?: number;                    // Social Media Followers (optional)
+  trend?: string;                // Business Trend (optional)
+}
+
+interface ValuationResult {
+  totalValuation: number;
+  breakdown: {
+    baseValuation: number;
+    valuationWithSocialMedia: number;
+    valuationWithAge: number;
+    finalValuation: number;
+  };
+  explanation: string;
+}
+
+export function calculateBusinessValuation(data: ValuationData): ValuationResult {
+  // 1. Set default values and handle missing inputs
+  const income = data.inc ?? data.rev * 0.1;
+  const socialMediaFollowers = data.sm ?? 1;
+  const trend = data.trend?.toLowerCase() ?? 'stable';
+
+  // 2. Industry multipliers
+  const industryMultipliers: { [key: string]: number } = {
+    tech: 3.0,
+    manufacturing: 2.5,
+    service: 2.2,
+    retail: 2.0,
+    'food & beverage': 1.8,
+    other: 1.5
+  };
+
+  // Get industry multiplier (default to 'other' if not found)
+  const industryMultiplier = industryMultipliers[data.industry.toLowerCase()] || industryMultipliers.other;
+
+  // 3. Years in operation multipliers
+  const operationYearMultipliers: { [key: string]: number } = {
+    'less than 1 year': 0.7,
+    '1-3 years': 0.9,
+    '3-5 years': 1.0,
+    '5+ years': 1.1
+  };
+
+  const opYearMultiplier = operationYearMultipliers[data.op_year.toLowerCase()] || 0.7;
+
+  // 4. Business trend multipliers
+  const trendMultipliers: { [key: string]: number } = {
+    declining: 0.9,
+    stable: 1.0,
+    growing: 1.1
+  };
+
+  const trendMultiplier = trendMultipliers[trend] || 1.0;
+
+  // 5. Calculate valuation according to the new formula
+  // Step a: Base valuation
+  const baseValuation = (industryMultiplier * income) + (data.asset - data.lia);
   
-  interface ValuationResult {
-    totalValuation: number;
+  // Step b: Apply social media multiplier
+  const valuationWithSocialMedia = baseValuation * (1 + (socialMediaFollowers * 0.0001));
+  
+  // Step c: Apply age multiplier
+  const valuationWithAge = valuationWithSocialMedia * opYearMultiplier;
+  
+  // Step d: Final valuation with trend multiplier
+  const finalValuation = valuationWithAge * trendMultiplier;
+
+  // 6. Format explanation
+  const explanation = `
+Business Valuation Breakdown:
+
+1. Base Valuation: $${baseValuation.toLocaleString()}
+   - Industry Multiplier: ${industryMultiplier}x
+   - Net Income Used: $${income.toLocaleString()}
+   - Asset/Liability Adjustment: $${(data.asset - data.lia).toLocaleString()}
+
+2. Social Media Adjustment: $${valuationWithSocialMedia.toLocaleString()}
+   - Followers: ${socialMediaFollowers.toLocaleString()}
+   - Adjustment Factor: ${(socialMediaFollowers * 0.0001).toFixed(4)}x
+
+3. Business Age Adjustment: $${valuationWithAge.toLocaleString()}
+   - Years in Operation: ${data.op_year}
+   - Age Multiplier: ${opYearMultiplier}x
+
+4. Final Valuation: $${finalValuation.toLocaleString()}
+   - Business Trend: ${trend}
+   - Trend Multiplier: ${trendMultiplier}x
+`;
+
+  return {
+    totalValuation: finalValuation,
     breakdown: {
-      coreBusinessValue: number;
-      socialMediaValue: number;
-      adjustedValue: number;
-    };
-    explanation: string;
-  }
-  
-  export function calculateBusinessValuation(data: ValuationData): ValuationResult {
-    // Calculate net income if not provided (assume 10% of revenue)
-    const netIncome = data.net_income ?? data.annual_revenue * 0.1;
-  
-    // Industry multipliers
-    const industryMultipliers: { [key: string]: number } = {
-      tech: 3.0,
-      retail: 2.0,
-      manufacturing: 2.5,
-      service: 2.2,
-      'food & beverage': 1.8,
-      other: 2.0
-    };
-  
-    // Get industry multiplier (default to 'other' if not found)
-    const industryMultiplier = industryMultipliers[data.industry.toLowerCase()] || industryMultipliers.other;
-  
-    // Calculate core business value
-    const coreBusinessValue = (netIncome * industryMultiplier) + data.assets - data.liabilities;
-  
-    // Calculate social media value ($0.10 per follower)
-    const socialMediaValue = data.social_media_followers * 0.10;
-  
-    // Calculate stability adjustments
-    let stabilityMultiplier = 1.0;
-  
-    // Years in operation adjustment
-    switch (data.years_in_operation.toLowerCase()) {
-      case 'less than 1 year':
-        stabilityMultiplier *= 0.8;
-        break;
-      case '1–3 years':
-        stabilityMultiplier *= 0.9;
-        break;
-      case '3–5 years':
-        stabilityMultiplier *= 1.0;
-        break;
-      case '5–10 years':
-        stabilityMultiplier *= 1.1;
-        break;
-      case '10+ years':
-        stabilityMultiplier *= 1.2;
-        break;
-    }
-  
-    // Revenue trend adjustment
-    switch (data.revenue_trend.toLowerCase()) {
-      case 'growing':
-        stabilityMultiplier *= 1.2;
-        break;
-      case 'stable':
-        stabilityMultiplier *= 1.0;
-        break;
-      case 'declining':
-        stabilityMultiplier *= 0.8;
-        break;
-    }
-  
-    // Calculate final adjusted value
-    const adjustedValue = (coreBusinessValue + socialMediaValue) * stabilityMultiplier;
-  
-    // Format explanation
-    const explanation = `
-  Business Valuation Breakdown:
-  - Core Business Value: $${coreBusinessValue.toLocaleString()}
-    
-  - Social Media Value: $${socialMediaValue.toLocaleString()}
-    (Based on ${data.social_media_followers.toLocaleString()} followers)
-  - Stability Adjustments: ${(stabilityMultiplier * 100 - 100).toFixed(1)}%
-    (Based on business age and revenue trend)
-  - Final Adjusted Value: $${adjustedValue.toLocaleString()}
-  `;
-  
-    return {
-      totalValuation: adjustedValue,
-      breakdown: {
-        coreBusinessValue,
-        socialMediaValue,
-        adjustedValue
-      },
-      explanation
-    };
-  }
+      baseValuation,
+      valuationWithSocialMedia,
+      valuationWithAge,
+      finalValuation
+    },
+    explanation
+  };
+}
