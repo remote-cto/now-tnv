@@ -6,6 +6,35 @@ import { generateValuationPDF } from '../../../utils/pdfGenerator';
 import dbConnect from '../../lib/mongodb';
 import Valuation from '../../models/Valuation';
 import { calculateBusinessValuation } from '../../../utils/valuationCalculator';
+import { formatCurrencyValue } from "../../../utils/formatters";
+
+// Define interfaces for type safety
+interface FormDataInput {
+  email: string;
+  companyName: string;
+  currency: string;
+  revenue: string;
+  netIncome: string;
+  industry: string;
+  assets: string;
+  liabilities: string;
+  yearsInOperation: string;
+  socialFollowers: string;
+  revenueTrend: string;
+  [key: string]: string; 
+}
+
+interface ProcessedData {
+  rev: number;
+  inc: number | null;
+  industry: string;
+  asset: number;
+  lia: number;
+  op_year: string;
+  sm: number;
+  trend: string;
+  currency: string; // Add currency to processed data
+}
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -20,10 +49,10 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const { formData } = await request.json();
-    const { email, companyName, ...valuationData } = formData;
+    const { email, companyName, currency, ...valuationData } = formData as FormDataInput;
 
     // Convert and map form data to new valuation format
-    const processedData = {
+    const processedData: ProcessedData = {
       rev: parseFloat(valuationData.revenue) || 0,
       inc: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
       industry: valuationData.industry || "other",
@@ -31,11 +60,15 @@ export async function POST(request: Request) {
       lia: parseFloat(valuationData.liabilities) || 0,
       op_year: valuationData.yearsInOperation || "less than 1 year",
       sm: parseInt(valuationData.socialFollowers) || 1,
-      trend: valuationData.revenueTrend || "stable"
+      trend: valuationData.revenueTrend || "stable",
+      currency: currency || "usd" // Include currency in processed data
     };
 
     // Calculate valuation using updated formula
     const valuationResult = calculateBusinessValuation(processedData);
+
+    // Format the valuation amount in the selected currency
+    const formattedValuation = formatCurrencyValue(valuationResult.totalValuation, processedData.currency);
 
     // Store in MongoDB
     const valuationRecord = {
@@ -53,7 +86,8 @@ export async function POST(request: Request) {
       const pdfBuffer = await generateValuationPDF({
         companyName,
         valuationResult: valuationResult.explanation,
-        formData: JSON.stringify(processedData, null, 2),
+        formData: JSON.stringify(processedData),
+        currency: processedData.currency // Now properly typed
       });
 
       // Send email with PDF attachment
@@ -65,7 +99,7 @@ export async function POST(request: Request) {
           <h1>Your Business Valuation Report</h1>
           <p>Dear ${companyName},</p>
           <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
-          <p>Final Valuation: $${valuationResult.totalValuation.toLocaleString()}</p>
+          <p>Final Valuation: ${formattedValuation}</p>
           <br>
           <p>Best regards,</p>
           <p>Your Business Valuation Team</p>

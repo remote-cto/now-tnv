@@ -84,6 +84,7 @@ const theme = createTheme({
 interface FormData {
   companyName: string;
   email: string;
+  currency: string;
   revenue: string;
   netIncome: string;
   industry: string;
@@ -127,11 +128,10 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
 );
 
 const BusinessValuationForm: React.FC = () => {
-
-
   const initialFormData: FormData = {
     companyName: "",
     email: "",
+    currency: "usd",
     revenue: "",
     netIncome: "",
     industry: "",
@@ -144,7 +144,6 @@ const BusinessValuationForm: React.FC = () => {
     revenueTrend: "",
   };
 
-
   const [formState, setFormState] = React.useState({
     data: initialFormData,
     errors: {} as FormErrors,
@@ -154,19 +153,19 @@ const BusinessValuationForm: React.FC = () => {
     success: null as string | null,
   });
 
-   // Add useEffect to clear success message and form data
-   useEffect(() => {
+  // Add useEffect to clear success message and form data
+  useEffect(() => {
     if (formState.success) {
       // Set a timeout to clear the success message after 3 seconds
       const successTimer = setTimeout(() => {
-        setFormState(prev => ({
+        setFormState((prev) => ({
           ...prev,
           success: null,
         }));
       }, 5000);
 
       // Reset form data immediately after success
-      setFormState(prev => ({
+      setFormState((prev) => ({
         ...prev,
         data: initialFormData,
       }));
@@ -176,13 +175,11 @@ const BusinessValuationForm: React.FC = () => {
     }
   }, [formState.success]);
 
-
-
   const handleNumericInput = useCallback(
     (field: keyof FormData) =>
       (e: React.ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
-        
+
         // Only allow empty string or valid numbers
         if (value === "" || /^\d*\.?\d*$/.test(value)) {
           setFormState((prev) => ({
@@ -203,7 +200,7 @@ const BusinessValuationForm: React.FC = () => {
           | SelectChangeEvent<string>
       ): void => {
         const value = e.target.value;
-        
+
         setFormState((prev) => ({
           ...prev,
           data: { ...prev.data, [field]: value },
@@ -212,7 +209,6 @@ const BusinessValuationForm: React.FC = () => {
       },
     []
   );
-
 
   const validateEmail = useCallback((email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -235,8 +231,6 @@ const BusinessValuationForm: React.FC = () => {
     setFormState((prev) => ({ ...prev, errors }));
     return Object.keys(errors).length === 0;
   }, [formState.data, validateEmail]);
-
- 
 
   const handleSelectChange = useCallback(
     (field: keyof FormData) =>
@@ -288,6 +282,13 @@ const BusinessValuationForm: React.FC = () => {
 
   const staticData = useMemo(
     () => ({
+      currencies: [
+        { value: "usd", label: "US Dollar ($)" },
+        { value: "kwd", label: "Kuwaiti Dinar (KD)" },
+        { value: "eur", label: "Euro (€)" },
+        { value: "gbp", label: "British Pound (£)" },
+        { value: "inr", label: "Indian Rupee (₹)" },
+      ],
       industries: [
         "Retail",
         "Service",
@@ -342,6 +343,20 @@ const BusinessValuationForm: React.FC = () => {
                   error={!!formState.errors.email}
                   helperText={formState.errors.email}
                 />
+                <FormControl fullWidth>
+                  <InputLabel>Select Currency</InputLabel>
+                  <Select
+                    value={formState.data.currency || "usd"} // Ensure there's always a value
+                    label="Select Currency"
+                    onChange={handleTextFieldChange("currency")}
+                  >
+                    {staticData.currencies.map((currency) => (
+                      <MenuItem key={currency.value} value={currency.value}>
+                        {currency.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
             </QuestionCard>
 
