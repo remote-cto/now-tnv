@@ -91,8 +91,8 @@ interface FormData {
   assets: string;
   liabilities: string;
   yearsInOperation: string;
-  monthlyCustomers: string;
-  employees: string;
+  // monthlyCustomers: string;
+  // employees: string;
   socialFollowers: string;
   revenueTrend: string;
 }
@@ -138,8 +138,8 @@ const BusinessValuationForm: React.FC = () => {
     assets: "",
     liabilities: "",
     yearsInOperation: "",
-    monthlyCustomers: "",
-    employees: "",
+    // monthlyCustomers: "",
+    // employees: "",
     socialFollowers: "",
     revenueTrend: "",
   };
@@ -304,7 +304,7 @@ const BusinessValuationForm: React.FC = () => {
         "5–10 years",
         "10+ years",
       ],
-      employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
+      // employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
       trendOptions: ["Growing", "Stable", "Declining"],
     }),
     []
@@ -480,7 +480,7 @@ const BusinessValuationForm: React.FC = () => {
               </FormControl>
             </QuestionCard>
 
-            <QuestionCard
+            {/* <QuestionCard
               number={7}
               question="How many customers did you serve last month?"
               explanation="If you don't track this, estimate the number of individual customers or orders you handled in the last month."
@@ -496,9 +496,9 @@ const BusinessValuationForm: React.FC = () => {
                   pattern: "\\d*",
                 }}
               />
-            </QuestionCard>
+            </QuestionCard> */}
 
-            <QuestionCard
+            {/* <QuestionCard
               number={8}
               question="How many employees do you have?"
               explanation="Include all part-time and full-time employees. If you're a solo business, select 'None'."
@@ -517,10 +517,11 @@ const BusinessValuationForm: React.FC = () => {
                   ))}
                 </Select>
               </FormControl>
-            </QuestionCard>
+            </QuestionCard> */}
+
 
             <QuestionCard
-              number={9}
+              number={7}
               question="How many followers do you have on your most active social media account?"
               explanation="Enter the number of followers on the platform where your business is most active, like Instagram, Twitter, or LinkedIn."
             >
@@ -538,7 +539,7 @@ const BusinessValuationForm: React.FC = () => {
             </QuestionCard>
 
             <QuestionCard
-              number={10}
+              number={8}
               question="Is your revenue growing, stable, or declining?"
               explanation="Pick the trend that best describes your revenue over the last 12 months."
             >
