@@ -33,10 +33,50 @@ function formatNumber(value: number, currency: string, locale: string): string {
 }
 
 function extractNumericValue(valuationResult: string): number {
-  // Remove any currency symbols, commas, and other non-numeric characters
-  // Keep decimal points and numbers
   const numStr = valuationResult.replace(/[^0-9.]/g, '');
   return parseFloat(numStr);
+}
+
+function addMethodologyPage(doc: jsPDF, pageWidth: number, pageHeight: number, margin: number) {
+  doc.addPage();
+  
+  // Add header
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'normal');
+  doc.text('The.Now.Company.', margin, 30);
+  doc.text(`${new Date().getFullYear()}.`, pageWidth - margin, 30, { align: 'right' });
+
+  // Add main heading
+  const headingY = 120;
+  doc.setFontSize(48);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Get more out of your numbers', margin, headingY);
+
+  // Add descriptive text
+  const description = `Our valuation methodology leverages advanced financial models and market insights to provide a comprehensive analysis of your business. Increasing your company's value often involves optimizing financial performance, improving operational efficiency, and strengthening market positioning. We can guide you through tailored strategies to achieve these goals, offering expertise in financial planning and operational improvements. Let us help you unlock your business's full potential and maximize its value.`;
+
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'normal');
+  const maxWidth = pageWidth - (2 * margin);
+  const splitDescription = doc.splitTextToSize(description, maxWidth);
+  doc.text(splitDescription, margin, headingY + 40);
+
+  // Add decorative X mark
+  try {
+    const xMarkPath = path.resolve('./public/images/x-mark.png');
+    const xMarkBase64 = getBase64Image(xMarkPath);
+    const xMarkSize = 150;
+    doc.addImage(
+      xMarkBase64,
+      'PNG',
+      pageWidth - margin - xMarkSize,
+      pageHeight - margin - xMarkSize,
+      xMarkSize,
+      xMarkSize
+    );
+  } catch (xMarkError) {
+    console.error('Error adding X mark:', xMarkError);
+  }
 }
 
 export async function generateValuationPDF(data: ValuationData): Promise<Buffer> {
@@ -68,18 +108,13 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         console.error('Error adding cover image:', coverImageError);
       }
 
-      // Second page header styling
+      // Second page - Company name
       let yPos = 30;
-      
-      // Add "The.Now.Company." text on the left
       doc.setFontSize(16);
       doc.setFont('helvetica', 'normal');
       doc.text('The.Now.Company.', margin, yPos);
-
-      // Add year on the right
       doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
 
-      // Add the company name in large text
       yPos = pageHeight / 3;
       doc.setFontSize(72);
       doc.setFont('helvetica', 'bold');
@@ -92,40 +127,34 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         doc.text(line, pageWidth / 2, lineY, { align: 'center' });
       });
 
-      // Add third page for valuation result
+      // Third page - Valuation result
       doc.addPage();
-
-      // Header styling for third page
       yPos = 30;
       doc.setFontSize(16);
       doc.setFont('helvetica', 'normal');
       doc.text('The.Now.Company.', margin, yPos);
       doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
 
-      // Add currency code in large text
       yPos = pageHeight / 4;
       doc.setFontSize(72);
       doc.setFont('helvetica', 'bold');
       doc.text(data.currency.toUpperCase(), margin, yPos);
 
-      // Add valuation amount in large text
       yPos = pageHeight / 2;
       doc.setFontSize(120);
       doc.setFont('helvetica', 'bold');
 
-      // Extract and format the numeric value
       const numericValue = extractNumericValue(data.valuationResult);
       const formattedValue = formatNumber(
         numericValue,
         currencySettings.format,
         currencySettings.locale
       );
-
-      // Remove any currency symbol from the formatted value if it exists
       const cleanFormattedValue = formattedValue.replace(/[£$€₹KD]/g, '').trim();
-      
-      // Add formatted number to PDF
       doc.text(cleanFormattedValue, margin, yPos);
+
+      // Add fourth page - Methodology
+      addMethodologyPage(doc, pageWidth, pageHeight, margin);
 
       // Convert to Buffer
       const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
