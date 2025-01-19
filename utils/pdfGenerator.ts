@@ -1,3 +1,5 @@
+
+//utils/pdfGenerator.ts
 import jsPDF from 'jspdf';
 import fs from 'fs';
 import path from 'path';
@@ -24,6 +26,10 @@ function getBase64Image(filePath: string): string {
 }
 
 function formatNumber(value: number, currency: string, locale: string): string {
+  if (currency.toLowerCase() === 'kwd') {
+    return `${value.toLocaleString('en-US')} KWD`;
+  }
+  
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,

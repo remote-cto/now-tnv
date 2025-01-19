@@ -1,3 +1,4 @@
+import { formatCurrencyValue } from "./formatters";
 
 //utils/valuationCalculator.ts
 interface ValuationData {
@@ -23,13 +24,33 @@ interface ValuationResult {
   explanation: string;
 }
 
-// Currency configuration
-const currencyConfig: { [key: string]: { symbol: string }} = {
-  usd: { symbol: '$' },
-  eur: { symbol: '€' },
-  gbp: { symbol: '£' },
-  inr: { symbol: '₹' },
-  kwd: { symbol: 'KD' }
+// Currency configuration with format handlers
+const currencyConfig: { 
+  [key: string]: { 
+    symbol: string;
+    formatValue: (value: number) => string;
+  }
+} = {
+  usd: { 
+    symbol: '$',
+    formatValue: (value: number) => `$${value.toLocaleString('en-US')}`
+  },
+  eur: { 
+    symbol: '€',
+    formatValue: (value: number) => `€${value.toLocaleString('de-DE')}`
+  },
+  gbp: { 
+    symbol: '£',
+    formatValue: (value: number) => `£${value.toLocaleString('en-GB')}`
+  },
+  inr: { 
+    symbol: '₹',
+    formatValue: (value: number) => `₹${value.toLocaleString('en-IN')}`
+  },
+  kwd: { 
+    symbol: 'KWD',
+    formatValue: (value: number) => `${value.toLocaleString('en-US')} KWD`
+  }
 };
 
 export function calculateBusinessValuation(
@@ -85,10 +106,12 @@ export function calculateBusinessValuation(
   const valuationWithAge = valuationWithSocialMedia * opYearMultiplier;
   const finalValuation = valuationWithAge * trendMultiplier;
 
+  const currencyFormatter = currencyConfig[data.currency?.toLowerCase() || 'usd'].formatValue;
+
+
   // 6. Updated explanation with dynamic currency symbol
-  const explanation = `
- Final Valuation: ${currencySymbol}${finalValuation.toLocaleString()}
-`;
+  const explanation = `Final Valuation: ${formatCurrencyValue(finalValuation, data.currency)}`;
+
 
   return {
     totalValuation: finalValuation,

@@ -63,19 +63,21 @@ async function sendUserEmail(
   formattedValuation: string, 
   pdfBuffer: Buffer
 ) {
+  const htmlContent = `
+    <h1>Your Business Valuation Report</h1>
+    <p>Dear ${companyName},</p>
+    <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
+    <p style="font-size: 18px; font-weight: bold;">Final Valuation: <span style="color: #00AB84;">${formattedValuation}</span></p>
+    <br>
+    <p>Best regards,</p>
+    <p>Your Business Valuation Team</p>
+  `;
+
   await transporter.sendMail({
     from: process.env.GMAIL_USER,
     to: email,
     subject: `Business Valuation Report - ${companyName}`,
-    html: `
-      <h1>Your Business Valuation Report</h1>
-      <p>Dear ${companyName},</p>
-      <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
-      <p>Final Valuation: ${formattedValuation}</p>
-      <br>
-      <p>Best regards,</p>
-      <p>Your Business Valuation Team</p>
-    `,
+    html: htmlContent,
     attachments: [
       {
         filename: `${companyName.replace(/\s+/g, '_')}_valuation_report.pdf`,
