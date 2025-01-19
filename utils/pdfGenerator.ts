@@ -167,7 +167,10 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         currencySettings.format,
         currencySettings.locale
       );
-      const cleanFormattedValue = formattedValue.replace(/[£$€₹KD]/g, '').trim();
+      const cleanFormattedValue = formattedValue
+        .replace(/[£$€₹]/g, '')  // Remove currency symbols
+        .replace(/\s*KWD\s*/, '') // Remove KWD with any surrounding spaces
+        .trim();
       doc.text(cleanFormattedValue, margin, yPos);
 
       // Add fourth page - Methodology
