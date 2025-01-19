@@ -1,4 +1,4 @@
-// pages/api/valuation/route.ts
+// app/api/valuation/route.ts
 
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
@@ -56,6 +56,65 @@ const transporter = nodemailer.createTransport({
     pass: process.env.GMAIL_APP_PASSWORD
   }
 });
+
+async function sendUserEmail(
+  email: string, 
+  companyName: string, 
+  formattedValuation: string, 
+  pdfBuffer: Buffer
+) {
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to: email,
+    subject: `Business Valuation Report - ${companyName}`,
+    html: `
+      <h1>Your Business Valuation Report</h1>
+      <p>Dear ${companyName},</p>
+      <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
+      <p>Final Valuation: ${formattedValuation}</p>
+      <br>
+      <p>Best regards,</p>
+      <p>Your Business Valuation Team</p>
+    `,
+    attachments: [
+      {
+        filename: `${companyName.replace(/\s+/g, '_')}_valuation_report.pdf`,
+        content: pdfBuffer,
+        contentType: 'application/pdf',
+      },
+    ],
+  });
+}
+
+async function sendHostConfirmationEmail(
+  companyName: string, 
+  formattedValuation: string, 
+  processedData: ProcessedData
+) {
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to: process.env.GMAIL_USER, // Send to host email
+    subject: `New Valuation Report Generated - ${companyName}`,
+    html: `
+      <h2>New Business Valuation Generated</h2>
+      <p>A new business valuation has been generated for ${companyName}.</p>
+      
+      <h3>Valuation Details:</h3>
+      <ul>
+        <li>Company Name: ${companyName}</li>
+        <li>Final Valuation: ${formattedValuation}</li>
+        <li>Industry: ${processedData.industry}</li>
+        <li>Revenue: ${formatCurrencyValue(processedData.revenue, processedData.currency)}</li>
+        <li>Net Income: ${processedData.netIncome ? formatCurrencyValue(processedData.netIncome, processedData.currency) : 'Not provided'}</li>
+        <li>Years in Operation: ${processedData.yearsInOperation}</li>
+        <li>Revenue Trend: ${processedData.revenueTrend}</li>
+      </ul>
+      
+      <p>This is an automated notification. Please do not reply to this email.</p>
+    `
+  });
+}
+
 
 export async function POST(request: Request) {
   try {
@@ -116,28 +175,10 @@ export async function POST(request: Request) {
         currency: processedData.currency // Now properly typed
       });
 
-      // Send email with PDF attachment
-      await transporter.sendMail({
-        from: process.env.GMAIL_USER,
-        to: email,
-        subject: `Business Valuation Report - ${companyName}`,
-        html: `
-          <h1>Your Business Valuation Report</h1>
-          <p>Dear ${companyName},</p>
-          <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
-          <p>Final Valuation: ${formattedValuation}</p>
-          <br>
-          <p>Best regards,</p>
-          <p>Your Business Valuation Team</p>
-        `,
-        attachments: [
-          {
-            filename: `${companyName.replace(/\s+/g, '_')}_valuation_report.pdf`,
-            content: pdfBuffer,
-            contentType: 'application/pdf',
-          },
-        ],
-      });
+      await sendUserEmail(email, companyName, formattedValuation, pdfBuffer);
+      
+      // Send confirmation email to host
+      await sendHostConfirmationEmail(companyName, formattedValuation, processedData);
 
       return NextResponse.json({
         content: valuationResult.explanation,
