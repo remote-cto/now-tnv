@@ -25,6 +25,18 @@ interface FormDataInput {
 }
 
 interface ProcessedData {
+  revenue: number;
+  netIncome: number | null;
+  industry: string;
+  assets: number;
+  liabilities: number;
+  yearsInOperation: string;
+  socialFollowers: number;
+  revenueTrend: string;
+  currency: string;
+}
+// Interface for valuation calculation with shortened names
+interface ValuationData {
   rev: number;
   inc: number | null;
   industry: string;
@@ -33,8 +45,9 @@ interface ProcessedData {
   op_year: string;
   sm: number;
   trend: string;
-  currency: string; // Add currency to processed data
+  currency: string;
 }
+
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -49,28 +62,41 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const { formData } = await request.json();
-    const { email, companyName, currency, ...valuationData } = formData as FormDataInput;
+    const { email, companyName, ...valuationData } = formData as FormDataInput;
 
-    // Convert and map form data to new valuation format
+    // Process data for MongoDB storage with descriptive names
     const processedData: ProcessedData = {
-      rev: parseFloat(valuationData.revenue) || 0,
-      inc: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
+      revenue: parseFloat(valuationData.revenue) || 0,
+      netIncome: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
       industry: valuationData.industry || "other",
-      asset: parseFloat(valuationData.assets) || 0,
-      lia: parseFloat(valuationData.liabilities) || 0,
-      op_year: valuationData.yearsInOperation || "less than 1 year",
-      sm: parseInt(valuationData.socialFollowers) || 1,
-      trend: valuationData.revenueTrend || "stable",
-      currency: currency || "usd" // Include currency in processed data
+      assets: parseFloat(valuationData.assets) || 0,
+      liabilities: parseFloat(valuationData.liabilities) || 0,
+      yearsInOperation: valuationData.yearsInOperation || "less than 1 year",
+      socialFollowers: parseInt(valuationData.socialFollowers) || 1,
+      revenueTrend: valuationData.revenueTrend || "stable",
+      currency: valuationData.currency || "usd"
     };
 
-    // Calculate valuation using updated formula
-    const valuationResult = calculateBusinessValuation(processedData);
+    // Convert to format expected by calculation function
+    const calculationData: ValuationData = {
+      rev: processedData.revenue,
+      inc: processedData.netIncome,
+      industry: processedData.industry,
+      asset: processedData.assets,
+      lia: processedData.liabilities,
+      op_year: processedData.yearsInOperation,
+      sm: processedData.socialFollowers,
+      trend: processedData.revenueTrend,
+      currency: processedData.currency
+    };
 
-    // Format the valuation amount in the selected currency
+    // Calculate valuation using the properly formatted data
+    const valuationResult = calculateBusinessValuation(calculationData);
+
+    // Format the valuation amount
     const formattedValuation = formatCurrencyValue(valuationResult.totalValuation, processedData.currency);
 
-    // Store in MongoDB
+    // Store in MongoDB with the descriptive field names
     const valuationRecord = {
       companyName,
       email,

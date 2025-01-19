@@ -1,5 +1,7 @@
 import jsPDF from 'jspdf';
 import { formatDate } from './formatters';
+import path from 'path';
+import fs from 'fs';
 
 interface ValuationData {
   companyName: string;
@@ -8,7 +10,6 @@ interface ValuationData {
   currency: string;
 }
 
-// Extended currency configuration
 const currencyConfig: { [key: string]: { symbol: string; locale: string; format: string }} = {
   usd: { symbol: '$', locale: 'en-US', format: 'USD' },
   eur: { symbol: '€', locale: 'de-DE', format: 'EUR' },
@@ -16,6 +17,34 @@ const currencyConfig: { [key: string]: { symbol: string; locale: string; format:
   inr: { symbol: '₹', locale: 'en-IN', format: 'INR' },
   kwd: { symbol: 'KD', locale: 'ar-KW', format: 'KWD' }
 };
+
+// Helper function to format valuation text with proper currency formatting
+function formatValuationText(text: string, currency: string, locale: string): string {
+  // Replace all currency values in the text
+  return text.replace(/\$\s?\d+(?:[.,]\d{1,2})?(?:k|K|m|M|b|B)?/g, (match) => {
+    // Extract numeric value
+    const numStr = match.replace(/[$,]/g, '').toLowerCase();
+    let multiplier = 1;
+    
+    // Handle suffixes
+    if (numStr.endsWith('k')) {
+      multiplier = 1000;
+    } else if (numStr.endsWith('m')) {
+      multiplier = 1000000;
+    } else if (numStr.endsWith('b')) {
+      multiplier = 1000000000;
+    }
+    
+    const value = parseFloat(numStr.replace(/[kmb]/i, '')) * multiplier;
+    
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  });
+}
 
 export async function generateValuationPDF(data: ValuationData): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -33,11 +62,19 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         format: 'a4'
       });
 
+      // Load and add the logo
+      const logoPath = path.join(process.cwd(), 'public', 'images', 'NowCompany.png');
+      const logoImage = fs.readFileSync(logoPath);
+      const logoDataUrl = `data:image/png;base64,${logoImage.toString('base64')}`;
+      
+      // Add logo to PDF (position at top left)
+      doc.addImage(logoDataUrl, 'PNG', 20, 10, 30, 30); // Adjust dimensions as needed
+
       // Set default font
       doc.setFont('helvetica', 'bold');
 
-      // Set initial position
-      let yPos = 20;
+      // Adjust initial position to accommodate logo
+      let yPos = 50; // Increased to make room for logo
       const margin = 20;
       const pageWidth = doc.internal.pageSize.getWidth();
       
@@ -93,67 +130,4 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
       reject(new Error(`Failed to generate PDF: ${errorMessage}`));
     }
   });
-}
-
-
-function formatValuationText(text: string, currency: string, locale: string): string {
-  // Replace all currency values in the text
-  return text.replace(/\$\s?\d+(?:[.,]\d{1,2})?(?:k|K|m|M|b|B)?/g, (match) => {
-    // Extract numeric value
-    const numStr = match.replace(/[$,]/g, '').toLowerCase();
-    let multiplier = 1;
-    
-    // Handle suffixes
-    if (numStr.endsWith('k')) {
-      multiplier = 1000;
-    } else if (numStr.endsWith('m')) {
-      multiplier = 1000000;
-    } else if (numStr.endsWith('b')) {
-      multiplier = 1000000000;
-    }
-    
-    const value = parseFloat(numStr.replace(/[kmb]/i, '')) * multiplier;
-    
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value);
-  });
-}
-
-function formatBusinessDetails(formData: any, currencySettings: { format: string; locale: string }): Record<string, string> {
-  const formattedDetails: Record<string, string> = {};
-  
-  const currencyFields = ['revenue', 'netIncome', 'assets', 'liabilities'];
-  
-  Object.entries(formData).forEach(([key, value]) => {
-    if (value && typeof value !== 'undefined') {
-      const formattedKey = formatKey(key);
-      
-      if (currencyFields.includes(key)) {
-        // Format currency values
-        const numValue = parseFloat(value as string);
-        formattedDetails[formattedKey] = new Intl.NumberFormat(currencySettings.locale, {
-          style: 'currency',
-          currency: currencySettings.format,
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        }).format(numValue);
-      } else {
-        // Format other values
-        formattedDetails[formattedKey] = String(value);
-      }
-    }
-  });
-  
-  return formattedDetails;
-}
-
-function formatKey(key: string): string {
-  return key
-    .split(/(?=[A-Z])|_/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
 }

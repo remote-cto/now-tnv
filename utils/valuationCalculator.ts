@@ -1,3 +1,5 @@
+
+//utils/valuationCalculator.ts
 interface ValuationData {
   rev: number; // Revenue
   inc?: number | null; // Income (optional)
@@ -85,7 +87,6 @@ export function calculateBusinessValuation(
 
   // 6. Updated explanation with dynamic currency symbol
   const explanation = `
-Business Valuation Breakdown:
  Final Valuation: ${currencySymbol}${finalValuation.toLocaleString()}
 `;
 
