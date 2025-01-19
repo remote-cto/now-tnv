@@ -35,6 +35,7 @@ interface ProcessedData {
   revenueTrend: string;
   currency: string;
 }
+
 // Interface for valuation calculation with shortened names
 interface ValuationData {
   rev: number;
@@ -47,7 +48,6 @@ interface ValuationData {
   trend: string;
   currency: string;
 }
-
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -85,36 +85,6 @@ async function sendUserEmail(
     ],
   });
 }
-
-async function sendHostConfirmationEmail(
-  companyName: string, 
-  formattedValuation: string, 
-  processedData: ProcessedData
-) {
-  await transporter.sendMail({
-    from: process.env.GMAIL_USER,
-    to: process.env.GMAIL_USER, // Send to host email
-    subject: `New Valuation Report Generated - ${companyName}`,
-    html: `
-      <h2>New Business Valuation Generated</h2>
-      <p>A new business valuation has been generated for ${companyName}.</p>
-      
-      <h3>Valuation Details:</h3>
-      <ul>
-        <li>Company Name: ${companyName}</li>
-        <li>Final Valuation: ${formattedValuation}</li>
-        <li>Industry: ${processedData.industry}</li>
-        <li>Revenue: ${formatCurrencyValue(processedData.revenue, processedData.currency)}</li>
-        <li>Net Income: ${processedData.netIncome ? formatCurrencyValue(processedData.netIncome, processedData.currency) : 'Not provided'}</li>
-        <li>Years in Operation: ${processedData.yearsInOperation}</li>
-        <li>Revenue Trend: ${processedData.revenueTrend}</li>
-      </ul>
-      
-      <p>This is an automated notification. Please do not reply to this email.</p>
-    `
-  });
-}
-
 
 export async function POST(request: Request) {
   try {
@@ -172,13 +142,10 @@ export async function POST(request: Request) {
         companyName,
         valuationResult: valuationResult.explanation,
         formData: JSON.stringify(processedData),
-        currency: processedData.currency // Now properly typed
+        currency: processedData.currency
       });
 
       await sendUserEmail(email, companyName, formattedValuation, pdfBuffer);
-      
-      // Send confirmation email to host
-      await sendHostConfirmationEmail(companyName, formattedValuation, processedData);
 
       return NextResponse.json({
         content: valuationResult.explanation,
