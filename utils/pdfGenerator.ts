@@ -40,9 +40,9 @@ function extractNumericValue(valuationResult: string): number {
 function addMethodologyPage(doc: jsPDF, pageWidth: number, pageHeight: number, margin: number) {
   doc.addPage();
   
-  // Add header
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'normal');
+  // Add header with larger, bold font
+  doc.setFontSize(24);
+  doc.setFont('helvetica', 'bold');
   doc.text('The.Now.Company.', margin, 30);
   doc.text(`${new Date().getFullYear()}.`, pageWidth - margin, 30, { align: 'right' });
 
@@ -52,25 +52,31 @@ function addMethodologyPage(doc: jsPDF, pageWidth: number, pageHeight: number, m
   doc.setFont('helvetica', 'bold');
   doc.text('Get more out of your numbers', margin, headingY);
 
-  // Add descriptive text
+  // Add descriptive text with larger font and bold
+  // Reduced gap by changing the Y position offset from 40 to 20
   const description = `Our valuation methodology leverages advanced financial models and market insights to provide a comprehensive analysis of your business. Increasing your company's value often involves optimizing financial performance, improving operational efficiency, and strengthening market positioning. We can guide you through tailored strategies to achieve these goals, offering expertise in financial planning and operational improvements. Let us help you unlock your business's full potential and maximize its value.`;
 
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'bold');
   const maxWidth = pageWidth - (2 * margin);
   const splitDescription = doc.splitTextToSize(description, maxWidth);
-  doc.text(splitDescription, margin, headingY + 40);
+  doc.text(splitDescription, margin, headingY + 20); // Reduced from headingY + 40 to headingY + 20
 
-  // Add decorative X mark
+  // Add smaller X mark below description
   try {
     const xMarkPath = path.resolve('./public/images/x-mark.png');
     const xMarkBase64 = getBase64Image(xMarkPath);
-    const xMarkSize = 150;
+    const xMarkSize = 50; // Reduced from 80 to 50
+    
+    // Calculate position to place X mark below description
+    const descriptionHeight = splitDescription.length * 12;
+    const xMarkY = headingY + 20 + descriptionHeight + 20; // Adjusted Y position based on new description position
+    
     doc.addImage(
       xMarkBase64,
       'PNG',
       pageWidth - margin - xMarkSize,
-      pageHeight - margin - xMarkSize,
+      xMarkY,
       xMarkSize,
       xMarkSize
     );
@@ -110,8 +116,8 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
 
       // Second page - Company name
       let yPos = 30;
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
       doc.text('The.Now.Company.', margin, yPos);
       doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
 
@@ -127,11 +133,16 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
         doc.text(line, pageWidth / 2, lineY, { align: 'center' });
       });
 
-      // Third page - Valuation result
+      // Third page - Valuation result with light green background
       doc.addPage();
+      
+      // Add light green background
+      doc.setFillColor(0, 171, 132);
+      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      
       yPos = 30;
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
       doc.text('The.Now.Company.', margin, yPos);
       doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
 
