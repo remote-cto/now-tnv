@@ -23,24 +23,20 @@ function getBase64Image(filePath: string): string {
   return `data:image/png;base64,${fileData.toString('base64')}`;
 }
 
-function formatValuationText(text: string, currency: string, locale: string): string {
-  return text.replace(/\$\s?\d+(?:[.,]\d{1,2})?(?:k|K|m|M|b|B)?/g, (match) => {
-    const numStr = match.replace(/[$,]/g, '').toLowerCase();
-    let multiplier = 1;
+function formatNumber(value: number, currency: string, locale: string): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
 
-    if (numStr.endsWith('k')) multiplier = 1000;
-    else if (numStr.endsWith('m')) multiplier = 1000000;
-    else if (numStr.endsWith('b')) multiplier = 1000000000;
-
-    const value = parseFloat(numStr.replace(/[kmb]/i, '')) * multiplier;
-
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  });
+function extractNumericValue(valuationResult: string): number {
+  // Remove any currency symbols, commas, and other non-numeric characters
+  // Keep decimal points and numbers
+  const numStr = valuationResult.replace(/[^0-9.]/g, '');
+  return parseFloat(numStr);
 }
 
 export async function generateValuationPDF(data: ValuationData): Promise<Buffer> {
@@ -48,106 +44,88 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
     try {
       const formDataObj = JSON.parse(data.formData);
       const currencySettings = currencyConfig[data.currency.toLowerCase()] || currencyConfig.usd;
+      const currentYear = new Date().getFullYear();
 
-      // Initialize PDF
+      // Initialize PDF with A3 landscape format
       const doc = new jsPDF({
-        orientation: 'portrait',
+        orientation: 'landscape',
         unit: 'mm',
-        format: 'a4',
+        format: 'a3',
         compress: true,
       });
 
-      // Set up dimensions
       const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-      let yPos = 20;
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 30;
 
-      // Add logo
+      // First page - Full width image
       try {
-        const logoPath = path.resolve('./public/images/NowCompany.png');
-        const logoBase64 = getBase64Image(logoPath);
-
-        const logoWidth = 60; // Adjust as needed
-        const logoHeight = 20; // Adjust as needed
-        const logoX = (pageWidth - logoWidth) / 2;
-
-        doc.addImage(logoBase64, 'PNG', logoX, yPos, logoWidth, logoHeight);
-        yPos += logoHeight + 10; // Add some spacing after the logo
-      } catch (logoError) {
-        console.error('Error adding logo:', logoError);
-        yPos += 10;
+        const coverImagePath = path.resolve('./public/images/cover-page.png');
+        const coverImageBase64 = getBase64Image(coverImagePath);
+        doc.addImage(coverImageBase64, 'PNG', 0, 0, pageWidth, pageHeight);
+        doc.addPage();
+      } catch (coverImageError) {
+        console.error('Error adding cover image:', coverImageError);
       }
 
-      // Add decorative line
-      doc.setDrawColor(0);
-      doc.setLineWidth(0.5);
-      doc.line(margin, yPos, pageWidth - margin, yPos);
+      // Second page header styling
+      let yPos = 30;
+      
+      // Add "The.Now.Company." text on the left
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'normal');
+      doc.text('The.Now.Company.', margin, yPos);
 
-      // Title
-      yPos += 20;
-      doc.setFontSize(24);
+      // Add year on the right
+      doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
+
+      // Add the company name in large text
+      yPos = pageHeight / 3;
+      doc.setFontSize(72);
       doc.setFont('helvetica', 'bold');
-      doc.text('Business Valuation Report', pageWidth / 2, yPos, { align: 'center' });
+      
+      const maxWidth = pageWidth - (2 * margin);
+      const splitCompanyName = doc.splitTextToSize(data.companyName, maxWidth);
+      
+      splitCompanyName.forEach((line: string, index: number) => {
+        const lineY = yPos + (index * 80);
+        doc.text(line, pageWidth / 2, lineY, { align: 'center' });
+      });
 
-      // Date with styling
-      yPos += 10;
-      doc.setFontSize(12);
-      doc.setTextColor(100);
-      doc.text(`Generated on ${formatDate(new Date())}`, pageWidth / 2, yPos, { align: 'center' });
+      // Add third page for valuation result
+      doc.addPage();
 
-      // Company Details Section
-      yPos += 20;
-      doc.setTextColor(0);
-      doc.setFontSize(18);
-      doc.text('Company Profile', margin, yPos);
+      // Header styling for third page
+      yPos = 30;
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'normal');
+      doc.text('The.Now.Company.', margin, yPos);
+      doc.text(`${currentYear}.`, pageWidth - margin, yPos, { align: 'right' });
 
-      yPos += 10;
-      doc.setFontSize(14);
-      doc.text(data.companyName, margin, yPos);
+      // Add currency code in large text
+      yPos = pageHeight / 4;
+      doc.setFontSize(72);
+      doc.setFont('helvetica', 'bold');
+      doc.text(data.currency.toUpperCase(), margin, yPos);
 
-      // Valuation Section with enhanced styling
-      yPos += 20;
-      doc.setFontSize(18);
-      doc.text('Valuation Analysis', margin, yPos);
+      // Add valuation amount in large text
+      yPos = pageHeight / 2;
+      doc.setFontSize(120);
+      doc.setFont('helvetica', 'bold');
 
-      // Format and add valuation result with better spacing
-      const formattedValuation = formatValuationText(
-        data.valuationResult,
+      // Extract and format the numeric value
+      const numericValue = extractNumericValue(data.valuationResult);
+      const formattedValue = formatNumber(
+        numericValue,
         currencySettings.format,
         currencySettings.locale
       );
 
-      yPos += 10;
-      doc.setFontSize(12);
-      const splitValuation = doc.splitTextToSize(formattedValuation, pageWidth - 2 * margin);
-      doc.text(splitValuation, margin, yPos);
-      yPos += splitValuation.length * 7;
-
-      // Add form data summary in a structured way
-      yPos += 15;
-      doc.setFontSize(18);
-      doc.text('Analysis Parameters', margin, yPos);
-
-      yPos += 10;
-      doc.setFontSize(12);
-      Object.entries(formDataObj).forEach(([key, value]) => {
-        yPos += 7;
-        doc.text(`${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`, margin, yPos);
-      });
-
-      // Enhanced footer with better styling
-      const footerY = doc.internal.pageSize.getHeight() - 25;
-      doc.setDrawColor(200);
-      doc.setLineWidth(0.3);
-      doc.line(margin, footerY - 10, pageWidth - margin, footerY - 10);
-
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      const footerText = 'This valuation report is based on the information provided and should be used for reference purposes only.';
-      const copyright = `© ${new Date().getFullYear()} The Now Company - All rights reserved`;
-
-      doc.text(footerText, pageWidth / 2, footerY, { align: 'center', maxWidth: pageWidth - 2 * margin });
-      doc.text(copyright, pageWidth / 2, footerY + 7, { align: 'center' });
+      // Remove any currency symbol from the formatted value if it exists
+      const cleanFormattedValue = formattedValue.replace(/[£$€₹KD]/g, '').trim();
+      
+      // Add formatted number to PDF
+      doc.text(cleanFormattedValue, margin, yPos);
 
       // Convert to Buffer
       const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
