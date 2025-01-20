@@ -1,6 +1,5 @@
 import { formatCurrencyValue } from "./formatters";
 
-//utils/valuationCalculator.ts
 interface ValuationData {
   rev: number; // Revenue
   inc?: number | null; // Income (optional)
@@ -10,7 +9,7 @@ interface ValuationData {
   op_year: string; // Years in Operation
   sm?: number; // Social Media Followers (optional)
   trend?: string; // Business Trend (optional)
-  currency: string; // Added currency field
+  currency: string;
 }
 
 interface ValuationResult {
@@ -24,7 +23,6 @@ interface ValuationResult {
   explanation: string;
 }
 
-// Currency configuration with format handlers
 const currencyConfig: { 
   [key: string]: { 
     symbol: string;
@@ -57,61 +55,61 @@ export function calculateBusinessValuation(
   data: ValuationData
 ): ValuationResult {
   // 1. Set default values and handle missing inputs
-  const income = data.inc ?? data.rev * 0.1;
+  const income = data.inc ?? data.rev * 0.05; 
   const socialMediaFollowers = data.sm ?? 1;
   const trend = data.trend?.toLowerCase() ?? "stable";
   const currencySymbol = currencyConfig[data.currency?.toLowerCase() || 'usd'].symbol;
 
-  // 2. Industry multipliers
+  // 2. Updated industry multipliers
   const industryMultipliers: { [key: string]: number } = {
-    tech: 3.0,
-    manufacturing: 2.5,
-    service: 2.2,
-    retail: 2.0,
-    "food & beverage": 1.8,
-    other: 1.5,
+    tech: 2.2,           
+    manufacturing: 2.0,  
+    service: 1.8,        
+    retail: 1.7,         
+    "food & beverage": 1.5, 
+    other: 1.3,         
   };
 
   const industryMultiplier =
     industryMultipliers[data.industry.toLowerCase()] ||
     industryMultipliers.other;
 
-  // 3. Years in operation multipliers
+  // 3. Updated years in operation multipliers
   const operationYearMultipliers: { [key: string]: number } = {
-    "less than 1 year": 0.7,
-    "1-3 years": 0.9,
-    "3-5 years": 1.0,
-    "5+ years": 1.1,
+    "less than 1 year": 0.8,  
+    "1-3 years": 0.9,         
+    "3-5 years": 1.0,         
+    "5+ years": 1.05,        
   };
   
-  // Normalize input
   const normalizeInput = (input: string) =>
     input.trim().toLowerCase().replace(/[\u2013\u2014]/g, "-");
   
   const formattedOpYear = normalizeInput(data.op_year);
-  const opYearMultiplier = operationYearMultipliers[formattedOpYear] || 0.7;
+  const opYearMultiplier = operationYearMultipliers[formattedOpYear] || 0.8; 
 
-  // 4. Business trend multipliers
+  // 4. Updated business trend multipliers
   const trendMultipliers: { [key: string]: number } = {
-    declining: 0.9,
-    stable: 1.0,
-    growing: 1.1,
+    declining: 0.95,  
+    stable: 1.0,      
+    growing: 1.05,    
   };
 
   const trendMultiplier = trendMultipliers[trend] || 1.0;
 
-  const baseValuation = industryMultiplier * income + (data.asset - data.lia);
-  const valuationWithSocialMedia =
-    baseValuation * (1 + socialMediaFollowers * 0.0001);
+  // 5. Updated calculation using new formula
+  const baseValuation = (industryMultiplier * income) + (data.asset - data.lia);
+  
+  // Calculate social media factor with cap at 0.5
+  const socialMediaFactor = Math.min(socialMediaFollowers * 0.00001, 0.5);
+  const valuationWithSocialMedia = baseValuation * (1 + socialMediaFactor);
+  
   const valuationWithAge = valuationWithSocialMedia * opYearMultiplier;
   const finalValuation = valuationWithAge * trendMultiplier;
 
   const currencyFormatter = currencyConfig[data.currency?.toLowerCase() || 'usd'].formatValue;
 
-
-  // 6. Updated explanation with dynamic currency symbol
   const explanation = `Final Valuation: ${formatCurrencyValue(finalValuation, data.currency)}`;
-
 
   return {
     totalValuation: finalValuation,

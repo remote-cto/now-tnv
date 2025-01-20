@@ -301,8 +301,8 @@ const BusinessValuationForm: React.FC = () => {
         "Less than 1 year",
         "1–3 years",
         "3–5 years",
-        "5–10 years",
-        "10+ years",
+        "5+ years",
+        
       ],
       // employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
       trendOptions: ["Growing", "Stable", "Declining"],
