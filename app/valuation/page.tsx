@@ -1,4 +1,3 @@
-//app/valuation/page.tsx
 "use client";
 import React, { useCallback, useMemo, useEffect } from "react";
 import {
@@ -153,10 +152,8 @@ const BusinessValuationForm: React.FC = () => {
     success: null as string | null,
   });
 
-  // Add useEffect to clear success message and form data
   useEffect(() => {
     if (formState.success) {
-      // Set a timeout to clear the success message after 3 seconds
       const successTimer = setTimeout(() => {
         setFormState((prev) => ({
           ...prev,
@@ -164,13 +161,11 @@ const BusinessValuationForm: React.FC = () => {
         }));
       }, 5000);
 
-      // Reset form data immediately after success
       setFormState((prev) => ({
         ...prev,
         data: initialFormData,
       }));
 
-      // Cleanup timer on component unmount
       return () => clearTimeout(successTimer);
     }
   }, [formState.success]);
@@ -180,7 +175,6 @@ const BusinessValuationForm: React.FC = () => {
       (e: React.ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
 
-        // Only allow empty string or valid numbers
         if (value === "" || /^\d*\.?\d*$/.test(value)) {
           setFormState((prev) => ({
             ...prev,
@@ -297,13 +291,7 @@ const BusinessValuationForm: React.FC = () => {
         "Food & Beverage",
         "Other",
       ],
-      yearsOptions: [
-        "Less than 1 year",
-        "1–3 years",
-        "3–5 years",
-        "5+ years",
-        
-      ],
+      yearsOptions: ["Less than 1 year", "1–3 years", "3–5 years", "5+ years"],
       // employeeOptions: ["None", "1–5", "6–10", "11–50", "51+"],
       trendOptions: ["Growing", "Stable", "Declining"],
     }),
@@ -518,7 +506,6 @@ const BusinessValuationForm: React.FC = () => {
                 </Select>
               </FormControl>
             </QuestionCard> */}
-
 
             <QuestionCard
               number={7}

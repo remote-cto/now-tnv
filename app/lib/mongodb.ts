@@ -1,4 +1,4 @@
-// lib/mongodb.ts
+
 import mongoose from 'mongoose';
 
 // Define the connection cache interface

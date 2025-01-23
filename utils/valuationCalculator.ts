@@ -1,16 +1,15 @@
 
-//utils/valuationCalculator.ts
 import { formatCurrencyValue } from "./formatters";
 
 interface ValuationData {
-  rev: number; // Revenue
-  inc?: number | null; // Income (optional)
+  rev: number; 
+  inc?: number | null; 
   industry: string;
-  asset: number; // Total Assets
-  lia: number; // Total Liabilities
-  op_year: string; // Years in Operation
-  sm?: number; // Social Media Followers (optional)
-  trend?: string; // Business Trend (optional)
+  asset: number; 
+  lia: number; 
+  op_year: string; 
+  sm?: number; 
+  trend?: string; 
   currency: string;
 }
 
@@ -56,13 +55,13 @@ const currencyConfig: {
 export function calculateBusinessValuation(
   data: ValuationData
 ): ValuationResult {
-  // 1. Set default values and handle missing inputs
+  //  Set default values and handle missing inputs
   const income = data.inc ?? data.rev * 0.05; 
   const socialMediaFollowers = data.sm ?? 1;
   const trend = data.trend?.toLowerCase() ?? "stable";
   const currencySymbol = currencyConfig[data.currency?.toLowerCase() || 'usd'].symbol;
 
-  // 2. Updated industry multipliers
+  //  industry multipliers
   const industryMultipliers: { [key: string]: number } = {
     tech: 2.2,           
     manufacturing: 2.0,  
@@ -76,7 +75,7 @@ export function calculateBusinessValuation(
     industryMultipliers[data.industry.toLowerCase()] ||
     industryMultipliers.other;
 
-  // 3. Updated years in operation multipliers
+  //  years in operation multipliers
   const operationYearMultipliers: { [key: string]: number } = {
     "less than 1 year": 0.8,  
     "1-3 years": 0.9,         
@@ -90,7 +89,7 @@ export function calculateBusinessValuation(
   const formattedOpYear = normalizeInput(data.op_year);
   const opYearMultiplier = operationYearMultipliers[formattedOpYear] || 0.8; 
 
-  // 4. Updated business trend multipliers
+  //  business trend multipliers
   const trendMultipliers: { [key: string]: number } = {
     declining: 0.95,  
     stable: 1.0,      
@@ -99,10 +98,10 @@ export function calculateBusinessValuation(
 
   const trendMultiplier = trendMultipliers[trend] || 1.0;
 
-  // 5. Updated calculation using new formula
+  // calculation 
   const baseValuation = (industryMultiplier * income) + (data.asset - data.lia);
   
-  // Calculate social media factor with cap at 0.5
+  // Calculate social media factor 
   const socialMediaFactor = Math.min(socialMediaFollowers * 0.00001, 0.5);
   const valuationWithSocialMedia = baseValuation * (1 + socialMediaFactor);
   

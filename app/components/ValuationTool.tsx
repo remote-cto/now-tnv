@@ -8,12 +8,10 @@ const ValuationTool = () => {
 
   return (
     <div className="bg-black lg:h-[88vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
-      {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-black"></div>
 
       <section className="w-full relative z-10">
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
-          {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
               <span className="bg-black bg-clip-text text-transparent font-['helveticanowtext-black-demo] text-white">
@@ -68,7 +66,6 @@ const ValuationTool = () => {
             </div>
           </div>
 
-          {/* Image Section */}
           <div className="lg:w-1/2 mb-6 lg:mb-0 lg:pl-10">
             <div
               className="relative group transform transition-all duration-500 hover:scale-105"

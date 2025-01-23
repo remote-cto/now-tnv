@@ -1,5 +1,3 @@
-// app/api/valuation/route.ts
-// app/api/valuation/route.ts
 
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
@@ -87,7 +85,7 @@ export async function POST(request: Request) {
     const { formData } = await request.json();
     const { email, companyName, ...valuationData } = formData as FormDataInput;
 
-    // Process data for MongoDB storage with descriptive names
+    // Process data for MongoDB storage 
     const processedData: ProcessedData = {
       revenue: parseFloat(valuationData.revenue) || 0,
       netIncome: valuationData.netIncome ? parseFloat(valuationData.netIncome) : null,
