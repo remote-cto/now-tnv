@@ -10,6 +10,7 @@ import { formatCurrencyValue } from "../../../utils/formatters";
 interface FormDataInput {
   email: string;
   companyName: string;
+  businessIndividualName: string;
   currency: string;
   revenue: string;
   netIncome: string;
@@ -58,10 +59,12 @@ const transporter = nodemailer.createTransport({
 async function sendUserEmail(
   email: string, 
   companyName: string, 
+  businessIndividualName: string,
   formattedValuation: string
 ) {
   const htmlContent = `
-    <h1>Your Business Valuation Report</h1>
+    <h1>Dear ${businessIndividualName},</h1>
+    <h2>Your Business Valuation Report</h2>
     <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
     <p style="font-size: 18px; font-weight: bold;">Company Name: <span style="color: #00AB84;">${companyName}</span></p>
     <p style="font-size: 18px; font-weight: bold;">Final Valuation: <span style="color: #00AB84;">${formattedValuation}</span></p>
@@ -83,7 +86,7 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const { formData } = await request.json();
-    const { email, companyName, ...valuationData } = formData as FormDataInput;
+    const { email, companyName,businessIndividualName, ...valuationData } = formData as FormDataInput;
 
     // Process data for MongoDB storage 
     const processedData: ProcessedData = {
@@ -120,6 +123,7 @@ export async function POST(request: Request) {
     // Store in MongoDB with the descriptive field names
     const valuationRecord = {
       companyName,
+      businessIndividualName,
       email,
       formData: processedData,
       valuationResult: valuationResult.explanation,
@@ -129,7 +133,9 @@ export async function POST(request: Request) {
     const savedValuation = await Valuation.create(valuationRecord);
 
     try {
-      await sendUserEmail(email, companyName, formattedValuation);
+      await sendUserEmail(email, companyName, businessIndividualName, formattedValuation);
+
+
 
       return NextResponse.json({
         content: valuationResult.explanation,

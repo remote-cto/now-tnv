@@ -10,6 +10,10 @@ const ValuationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  businessIndividualName: { 
+    type: String,
+    required: true,
+  },
   formData: {
     revenue: Number,
     netIncome: Number,

@@ -83,6 +83,7 @@ const theme = createTheme({
 interface FormData {
   companyName: string;
   email: string;
+  businessIndividualName: string;
   currency: string;
   revenue: string;
   netIncome: string;
@@ -99,6 +100,7 @@ interface FormData {
 interface FormErrors {
   companyName?: string;
   email?: string;
+  businessIndividualName?: string;
 }
 
 interface QuestionCardProps {
@@ -130,6 +132,7 @@ const BusinessValuationForm: React.FC = () => {
   const initialFormData: FormData = {
     companyName: "",
     email: "",
+    businessIndividualName: "",
     currency: "usd",
     revenue: "",
     netIncome: "",
@@ -211,10 +214,13 @@ const BusinessValuationForm: React.FC = () => {
 
   const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
-    const { companyName, email } = formState.data;
+    const { companyName, email, businessIndividualName } = formState.data;
 
     if (!companyName.trim()) {
       errors.companyName = "Company name is required";
+    }
+    if (!businessIndividualName.trim()) {
+      errors.businessIndividualName = "Business individual name is required";
     }
     if (!email.trim()) {
       errors.email = "Email address is required";
@@ -330,6 +336,15 @@ const BusinessValuationForm: React.FC = () => {
                   onChange={handleTextFieldChange("email")}
                   error={!!formState.errors.email}
                   helperText={formState.errors.email}
+                />
+                <TextField
+                  required
+                  fullWidth
+                  label="Business Individual Name"
+                  value={formState.data.businessIndividualName}
+                  onChange={handleTextFieldChange("businessIndividualName")}
+                  error={!!formState.errors.businessIndividualName}
+                  helperText={formState.errors.businessIndividualName}
                 />
                 <FormControl fullWidth>
                   <InputLabel>Select Currency</InputLabel>
