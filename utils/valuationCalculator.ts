@@ -1,4 +1,3 @@
-
 import { formatCurrencyValue } from "./formatters";
 
 interface ValuationData {
@@ -56,7 +55,7 @@ export function calculateBusinessValuation(
   data: ValuationData
 ): ValuationResult {
   //  Set default values and handle missing inputs
-  const income = data.inc ?? data.rev * 0.05; 
+  const income = data.inc ?? (data.rev * 0.05); 
   const socialMediaFollowers = data.sm ?? 1;
   const trend = data.trend?.toLowerCase() ?? "stable";
   const currencySymbol = currencyConfig[data.currency?.toLowerCase() || 'usd'].symbol;
@@ -98,8 +97,9 @@ export function calculateBusinessValuation(
 
   const trendMultiplier = trendMultipliers[trend] || 1.0;
 
-  // calculation 
-  const baseValuation = (industryMultiplier * income) + (data.asset - data.lia);
+  // Calculation according to the new formula
+
+  const baseValuation = (industryMultiplier * income) + (data.asset - (data.lia / 6));
   
   // Calculate social media factor 
   const socialMediaFactor = Math.min(socialMediaFollowers * 0.00001, 0.5);
