@@ -65,7 +65,7 @@ async function sendUserEmail(
   const htmlContent = `
     <h1>Dear ${businessIndividualName},</h1>
     <h2>Your Business Valuation Report</h2>
-    <p>Thank you for using our business valuation tool. Please find your detailed valuation report attached to this email.</p>
+    <p>Thank you for using our business valuation tool.p>
     <p style="font-size: 18px; font-weight: bold;">Company Name: <span style="color: #00AB84;">${companyName}</span></p>
     <p style="font-size: 18px; font-weight: bold;">Final Valuation: <span style="color: #00AB84;">${formattedValuation}</span></p>
     <br>
