@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import cron from "node-cron";
 import dbConnect from "../../lib/mongodb";
 import Valuation from "../../models/Valuation";
 import { calculateBusinessValuation } from "../../../utils/valuationCalculator";
@@ -35,7 +34,6 @@ interface ProcessedData {
   currency: string;
 }
 
-// Interface for valuation calculation with shortened names
 interface ValuationData {
   rev: number;
   inc: number | null;
@@ -48,6 +46,7 @@ interface ValuationData {
   currency: string;
 }
 
+// Configure email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -56,6 +55,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Send initial valuation email
 async function sendUserEmail(
   email: string,
   companyName: string,
@@ -65,7 +65,7 @@ async function sendUserEmail(
   const htmlContent = `
     <h1>Dear ${businessIndividualName},</h1>
     <h2>Your Business Valuation Report</h2>
-    <p>Thank you for using our business valuation tool.p>
+    <p>Thank you for using our business valuation tool. </p>
     <p style="font-size: 18px; font-weight: bold;">Company Name: <span style="color: #00AB84;">${companyName}</span></p>
     <p style="font-size: 18px; font-weight: bold;">Final Valuation: <span style="color: #00AB84;">${formattedValuation}</span></p>
     <br>
@@ -81,7 +81,7 @@ async function sendUserEmail(
   });
 }
 
-// New function for follow-up email
+// Send follow-up email
 async function sendFollowUpEmail(
   email: string,
   companyName: string,
@@ -91,9 +91,7 @@ async function sendFollowUpEmail(
     <h1>Hi ${businessIndividualName},</h1>
     <h2>Upgrade Your Business Valuation</h2>
     <p>We noticed you recently used our business valuation tool for ${companyName}.</p>
-    
     <p>Upgrade now and unlock deeper insights into your business's potential!</p>
-    
     <br><br>
     <p>Best regards,</p>
     <p>Your Business Valuation Team</p>
@@ -107,30 +105,21 @@ async function sendFollowUpEmail(
   });
 }
 
-// Schedule follow-up email
+// Improved email scheduling function
 function scheduleFollowUpEmail(
   email: string,
   companyName: string,
   businessIndividualName: string
 ) {
-  // Schedule email to be sent after 5 minutes
-  const scheduledTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
-
-  cron.schedule(
-    scheduledTime.toISOString(),
-    async () => {
-      try {
-        await sendFollowUpEmail(email, companyName, businessIndividualName);
-        console.log(`Follow-up email scheduled and sent to ${email}`);
-      } catch (error) {
-        console.error("Follow-up Email Scheduling Error:", error);
-      }
-    },
-    {
-      scheduled: true,
-      timezone: "UTC",
+  // Use setTimeout instead of cron for reliable 1-minute delay
+  setTimeout(async () => {
+    try {
+      await sendFollowUpEmail(email, companyName, businessIndividualName);
+      console.log(`Follow-up email sent to ${email}`);
+    } catch (error) {
+      console.error("Follow-up Email Sending Error:", error);
     }
-  );
+  }, 1 * 60 * 1000); // 1 minute delay
 }
 
 export async function POST(request: Request) {
