@@ -63,14 +63,13 @@ async function sendUserEmail(
   formattedValuation: string
 ) {
   const htmlContent = `
-    <h1>Dear ${businessIndividualName},</h1>
-    <h2>Your Business Valuation Report</h2>
-    <p>Thank you for using our business valuation tool. </p>
-    <p style="font-size: 18px; font-weight: bold;">Company Name: <span style="color: #00AB84;">${companyName}</span></p>
-    <p style="font-size: 18px; font-weight: bold;">Final Valuation: <span style="color: #00AB84;">${formattedValuation}</span></p>
+    <h2>Dear ${businessIndividualName},</h2>
+    <p>Thank you for using NOW business valuation tool. </p>
+    <p>Company Name: <span style="font-weight: bold;">${companyName}</span></p>
+    <p>Final Valuation: <span style="font-weight: bold;">${formattedValuation}</span></p>
     <br>
     <p>Best regards,</p>
-    <p>Your Business Valuation Team</p>
+    <p>NOW Business Valuation Team</p>
   `;
 
   await transporter.sendMail({
@@ -88,7 +87,7 @@ async function sendFollowUpEmail(
   businessIndividualName: string
 ) {
   const htmlContent = `
-    <h1>Hi ${businessIndividualName},</h1>
+    <h2>Hi ${businessIndividualName},</h2>
     <h2>Upgrade Your Business Valuation</h2>
     <p>We noticed you recently used our business valuation tool for ${companyName}.</p>
     <p>Upgrade now and unlock deeper insights into your business's potential!</p>
