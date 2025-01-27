@@ -93,7 +93,7 @@ async function sendFollowUpEmail(
     <p>Upgrade now and unlock deeper insights into your business's potential!</p>
     <br><br>
     <p>Best regards,</p>
-    <p>Your Business Valuation Team</p>
+    <p>NOW Business Valuation Team</p>
   `;
 
   await transporter.sendMail({
