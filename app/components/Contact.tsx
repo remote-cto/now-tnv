@@ -22,9 +22,7 @@ const Contact: React.FC = () => {
           <p className="text-xl font-['helveticanowtext-black-demo]">
             email: xxyxyxyx@tnv.com
           </p>
-          <p className="text-xl font-['helveticanowtext-black-demo]">
-            customer support: +00000 0000 0000
-          </p>
+          
         </div>
       </div>
     </div>
