@@ -55,7 +55,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send initial valuation email
+// Send valuation email
 async function sendUserEmail(
   email: string,
   companyName: string,
@@ -78,70 +78,6 @@ async function sendUserEmail(
     subject: `Business Valuation Report - ${companyName}`,
     html: htmlContent,
   });
-}
-
-// Send follow-up email with email number
-async function sendFollowUpEmail(
-  email: string,
-  companyName: string,
-  businessIndividualName: string,
-  emailNumber: number
-) {
-  const htmlContent = `
-    <h2>Hi ${businessIndividualName},</h2>
-    <h2>Upgrade Your Business Valuation - Follow-up ${emailNumber}</h2>
-    <p>We noticed you recently used our business valuation tool for ${companyName}.</p>
-    <p>Upgrade now and unlock deeper insights into your business's potential!</p>
-    <br><br>
-    <p>Best regards,</p>
-    <p>NOW Business Valuation Team</p>
-  `;
-
-  await transporter.sendMail({
-    from: process.env.GMAIL_USER,
-    to: email,
-    subject: `Upgrade Your Business Valuation - ${companyName}`,
-    html: htmlContent,
-  });
-}
-
-// Schedule multiple follow-up emails with delays
-function scheduleMultipleFollowUpEmails(
-  email: string,
-  companyName: string,
-  businessIndividualName: string
-) {
-  // First follow-up email after 1 minute
-  setTimeout(async () => {
-    try {
-      await sendFollowUpEmail(email, companyName, businessIndividualName, 1);
-      console.log(`First follow-up email sent to ${email}`);
-
-      // Second follow-up email after another minute
-      setTimeout(async () => {
-        try {
-          await sendFollowUpEmail(email, companyName, businessIndividualName, 2);
-          console.log(`Second follow-up email sent to ${email}`);
-
-          // Third follow-up email after another minute
-          setTimeout(async () => {
-            try {
-              await sendFollowUpEmail(email, companyName, businessIndividualName, 3);
-              console.log(`Third follow-up email sent to ${email}`);
-            } catch (error) {
-              console.error("Third Follow-up Email Sending Error:", error);
-            }
-          }, 1 * 60 * 1000); // 1 minute delay for third email
-
-        } catch (error) {
-          console.error("Second Follow-up Email Sending Error:", error);
-        }
-      }, 1 * 60 * 1000); // 1 minute delay for second email
-
-    } catch (error) {
-      console.error("First Follow-up Email Sending Error:", error);
-    }
-  }, 1 * 60 * 1000); // 1 minute delay for first email
 }
 
 // Main API handler
@@ -206,7 +142,7 @@ export async function POST(request: Request) {
     const savedValuation = await Valuation.create(valuationRecord);
 
     try {
-      // Send initial valuation email
+      // Send valuation email
       await sendUserEmail(
         email,
         companyName,
@@ -214,14 +150,10 @@ export async function POST(request: Request) {
         formattedValuation
       );
 
-      // Schedule the three follow-up emails
-      scheduleMultipleFollowUpEmails(email, companyName, businessIndividualName);
-
       // Return success response
       return NextResponse.json({
         content: valuationResult.explanation,
-        message:
-          "Valuation report has been sent to your email. Three follow-up emails will be sent over the next few minutes.",
+        message: "Valuation report has been sent to your email.",
         id: savedValuation._id,
       });
     } catch (error) {
