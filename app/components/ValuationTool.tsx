@@ -15,7 +15,7 @@ const ValuationTool = () => {
           />
           
         
-          <div className="absolute bottom-1/4 md:bottom-1/3 left-[9%]">
+          <div className="absolute bottom-1/4 md:bottom-1/3 left-[8%]">
             <Link
               href="/valuation"
               className="flex items-center text-white text-xl lg:text-4xl font-bold font-['helveticanowtext-black-demo']"

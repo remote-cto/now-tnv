@@ -18,7 +18,7 @@ const WorkingValuationTool = () => {
           business from a fresh perspective.
         </p>
       </div>
-      <div className="w-full h-px bg-white mt-16"></div>
+      {/* <div className="w-full h-px bg-white mt-16"></div> */}
     </div>
   );
 };
