@@ -310,7 +310,7 @@ const BusinessValuationForm: React.FC = () => {
       <NowValuationTool />
       <ValuationQuestionAnswer />
       <ThemeProvider theme={theme}>
-        <div className="bg-black font-['helveticanowtext-black-demo]">
+        <div className="bg-black font-['helveticanowtext-black-demo']">
           <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
             <QuestionCard
               number="*"

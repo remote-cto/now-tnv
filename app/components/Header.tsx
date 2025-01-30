@@ -7,28 +7,40 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState("");
 
   const socialLinks = [
-    { icon: Facebook, href: "https://facebook.com/yourcompany", name: "facebook" },
-    { icon: Instagram, href: "https://www.instagram.com/thenow.company/", name: "instagram" },
-    { icon: Linkedin, href: "https://linkedin.com/yourcompany", name: "linkedin" },
+    {
+      icon: Facebook,
+      href: "https://facebook.com/yourcompany",
+      name: "facebook",
+    },
+    {
+      icon: Instagram,
+      href: "https://www.instagram.com/thenow.company/",
+      name: "instagram",
+    },
+    {
+      icon: Linkedin,
+      href: "https://linkedin.com/yourcompany",
+      name: "linkedin",
+    },
   ];
 
   return (
-    <header className="flex items-center justify-between p-4 bg-gray-100 transition-all duration-300 hover:bg-gray-200">
-      <div className="flex items-center">
+    <header className="flex items-center justify-between p-5 bg-gray-100 transition-all duration-300 hover:bg-gray-200 font-['helveticanowtext-black-demo']">
+      <div className="flex items-center ">
         <Link href="/">
           <div
             className="text-2xl lg:text-5xl font-extrabold relative group cursor-pointer"
             onMouseEnter={() => setIsHovered("logo")}
             onMouseLeave={() => setIsHovered("")}
           >
-            <span className="bg-black bg-clip-text text-transparent font-['helveticanowtext-black-demo]">
+            <div className="text-2xl lg:text-5xl font-extrabold relative group cursor-pointer">
               The
-              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['helveticanowtext-black-demo'] "></span>
               Now
-              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['helveticanowtext-black-demo']"></span>
               Company
-              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['Uniform_Rounded_Condensed_Black]"></span>
-            </span>
+              <span className="inline-block  w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['helveticanowtext-black-demo']"></span>
+            </div>
           </div>
         </Link>
       </div>

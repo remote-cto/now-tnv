@@ -20,7 +20,7 @@ const ValuationTool = () => {
               href="/valuation"
               className="flex items-center text-white text-xl lg:text-4xl font-bold font-['helveticanowtext-black-demo']"
             >
-              Get Started
+              Get Started Here
               <Plus 
                 className="text-yellow-300 ml-1" 
                 size={25}  

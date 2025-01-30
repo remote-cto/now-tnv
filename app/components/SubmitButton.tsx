@@ -11,7 +11,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ loading = false, onClick })
       <button
         onClick={onClick}
         disabled={loading}
-        className="w-full bg-black text-white text-2xl font-extrabold py-4 px-3 rounded-full hover:bg-gray-900 disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-200 shadow-md mt-3 font-['Helvetica'] "
+        className="w-full bg-black text-white text-2xl font-extrabold py-4 px-3 rounded-full hover:bg-gray-900 disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-200 shadow-md mt-3 font-['helveticanowtext-black-demo']"
       >
         {loading ? (
           <div className="flex justify-center items-center">

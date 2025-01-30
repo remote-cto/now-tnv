@@ -15,20 +15,20 @@ const ValuationQuestionAnswer = () => {
         <div className="mx-auto max-w-screen-xl px-4 flex flex-wrap lg:flex-nowrap lg:items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left">
-            <h2 className="text-3xl md:text-6xl font-extrabold text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
+            <h2 className="text-3xl md:text-6xl  text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo']">
               Valuation Questions & Answers
             </h2>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo]">
+            <h2 className="text-2xl md:text-4xl  text-black mb-6 animate-fade-in font-['helveticanowtext-black-demo']">
               Start with some key details
             </h2>
 
             <div>
-              <p className="text-lg text-black/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo]">
+              <p className="text-lg text-black/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo']">
                 TNV uses your inputs and compares data to thousands of similar
                 sites that have sold on TNV. We analyze business model,
                 category, age and other factors.
               </p>
-              <p className="text-lg text-black/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo]">
+              <p className="text-lg text-black/90 sm:text-xl mb-4 font-['helveticanowtext-black-demo']">
                 We also consider how many buyers are interested in sites like
                 yours.
               </p>
