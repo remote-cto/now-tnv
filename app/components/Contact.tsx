@@ -4,7 +4,7 @@ const Contact: React.FC = () => {
   return (
     <div className="bg-black flex flex-col items-center justify-center text-white py-12 px-4 mb-4 font-['helveticanowtext-black-demo']">
       <div className="max-w-3xl w-full text-center space-y-8">
-        <h1 className="text-3xl lg:text-6xl font-extrabold mb-6 font-['Helvetica']">
+        <h1 className="text-3xl lg:text-6xl font-extrabold mb-6 font-['helveticanowtext-black-demo'] ">
           Need Help?
         </h1>
 
