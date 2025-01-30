@@ -7,7 +7,7 @@ const ValuationQuestionAnswer = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="bg-white lg:h-[85vh] flex items-center py-8 lg:py-0 relative overflow-hidden">
+    <div className="bg-white lg:h-[85vh] flex items-center py-8 lg:py-0 relative overflow-hidden font-['helveticanowtext-black-demo']">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-white"></div>
 
