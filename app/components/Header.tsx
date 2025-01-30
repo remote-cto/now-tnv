@@ -33,7 +33,7 @@ const Header = () => {
             onMouseEnter={() => setIsHovered("logo")}
             onMouseLeave={() => setIsHovered("")}
           >
-            <div className="text-2xl lg:text-5xl font-extrabold relative group cursor-pointer">
+            <div className="text-xl lg:text-5xl font-extrabold relative group cursor-pointer">
               The
               <span className="inline-block w-1 h-1 lg:w-3 lg:h-3 bg-black rounded-full font-['helveticanowtext-black-demo'] "></span>
               Now
