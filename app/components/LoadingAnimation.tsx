@@ -32,7 +32,7 @@ const LoadingAnimation = () => {
           <div className="absolute -bottom-2 -right-2 w-4 h-4 rounded-full bg-gray-600 animate-[bounce_1s_ease-in-out_infinite_0.5s]"></div>
         </div>
 
-        <div className="text-gray-800 font-medium tracking-wider animate-[pulse_2s_ease-in-out_infinite]">
+        <div className="text-gray-800 font-medium tracking-wider animate-[pulse_2s_ease-in-out_infinite] font-['helveticanowtext-black-demo'] ">
           LOADING
         </div>
 
