@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const ValuationTool = () => {
   return (
-    <section className="relative w-full ">
+    <section className="relative w-full bg-black ">
       <div className="relative w-full">
        
         <div className="w-full relative">
