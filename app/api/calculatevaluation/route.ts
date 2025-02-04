@@ -56,6 +56,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Send valuation email
+
 async function sendUserEmail(
   email: string,
   companyName: string,
@@ -63,19 +64,37 @@ async function sendUserEmail(
   formattedValuation: string
 ) {
   const htmlContent = `
-    <h2>Dear ${businessIndividualName},</h2>
-    <p>Thank you for using NOW business valuation tool. </p>
-    <p>Company Name: <span style="font-weight: bold;">${companyName}</span></p>
-    <p>Final Valuation: <span style="font-weight: bold;">${formattedValuation}</span></p>
-    <br>
-    <p>Best regards,</p>
-    <p>NOW Business Valuation Team</p>
+    <h2>Hi ${businessIndividualName},</h2>
+    <p>Excellent move! You've taken a crucial step by calculating your business valuation.</p>
+    <p>${companyName}</p>
+    <p>The value of your company is <span style="color: #00A36C; font-weight: bold;">${formattedValuation}</span></p>
+    <p>You've already created momentum—let's build on it! Here's what we need to do next:</p>
+    <ul style="list-style-type: disc; margin-left: 20px;">
+      <li>Understand how your revenue, margins, and growth rates influenced this result.</li>
+      <li>Look for ways to enhance your value in a short amount of time.</li>
+    </ul>
+    <p>Ready to dive deeper? Schedule a quick call with us so we can talk about finding ways to raise your valuation in weeks.</p>
+    <div style="margin: 20px 0;">
+       <a href="https://wa.me/96597777249"  
+         style="background-color: #007bff; 
+                color: white; 
+                padding: 10px 20px; 
+                text-decoration: none; 
+                border-radius: 5px; 
+                display: inline-block;">
+        Book a free call
+      </a>
+    </div>
+    <p>To your success,</p>
+    <p>Tarek J. Aljasem<br>
+    Founder<br>
+    The Now Company</p>
   `;
 
   await transporter.sendMail({
     from: process.env.GMAIL_USER,
     to: email,
-    subject: `Business Valuation Report - ${companyName}`,
+    subject: `Your Business Valuation Results - ${companyName}`,
     html: htmlContent,
   });
 }
