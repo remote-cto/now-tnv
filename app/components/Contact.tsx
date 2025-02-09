@@ -352,8 +352,8 @@ const Contact: React.FC = () => {
           <div className="bg-black font-['helveticanowtext-black-demo']">
             
             <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
-            <div className="text-xl md:text-4xl text-white text-center mt-6 animate-fade-in font-['helveticanowtext-black-demo'] mb-2 lg:mb-6">
-              Start with some key details
+            <div className="text-lg md:text-4xl text-white text-center mt-6 animate-fade-in font-['helveticanowtext-black-demo'] mb-2 lg:mb-6 underline">
+              START WITH SOME KEY DETAILS
             </div>
               <QuestionCard
                 number="*"
