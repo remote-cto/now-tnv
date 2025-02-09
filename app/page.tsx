@@ -7,6 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
 import WorkingValuationTool from "./components/WorkingValuationTool";
 import LoadingAnimation from "./components/LoadingAnimation";
+import ValuationPageFooter from "./components/ValuationPageFooter";
 
 export default function Home() {
   return (
@@ -17,7 +18,8 @@ export default function Home() {
       <WorkingValuationTool/>
       {/* <Testimonial /> */}
       <Contact />
-      <Footer/>
+      {/* <Footer/> */}
+      <ValuationPageFooter/>
       <ScrollToTop /> 
     </div>
   );

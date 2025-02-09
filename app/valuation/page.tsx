@@ -306,9 +306,9 @@ const BusinessValuationForm: React.FC = () => {
 
   return (
     <>
-      <Header />
-      <NowValuationTool />
-      <ValuationQuestionAnswer />
+      {/* <Header />
+      <NowValuationTool /> */}
+      {/* <ValuationQuestionAnswer /> */}
       <ThemeProvider theme={theme}>
         <div className="bg-black font-['helveticanowtext-black-demo']">
           <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
@@ -573,21 +573,12 @@ const BusinessValuationForm: React.FC = () => {
               </Alert>
             )}
 
-            {/* {formState.result && (
-            <Paper sx={{ mt: 2, p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Valuation Result
-              </Typography>
-              <Typography sx={{ whiteSpace: "pre-wrap" }}>
-                {formState.result}
-              </Typography>
-            </Paper>
-          )} */}
+           
           </Box>
         </div>
       </ThemeProvider>
       <SubmitButton loading={formState.loading} onClick={handleSubmit} />
-      <ValuationPageFooter />
+      {/* <ValuationPageFooter /> */}
     </>
   );
 };
