@@ -163,14 +163,20 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
         </Tooltip>
         {/* Additional Tooltip for Arabic explanation */}
         <Tooltip title={arabicExplanation} placement="right" arrow>
-          <IconButton size="small" sx={{ ml: 1 }}>
-            <Typography
-              variant="body2"
-              sx={{ fontFamily: "Arial", fontWeight: "bold" }}
-            >
-              ع
-            </Typography>
-          </IconButton>
+        <IconButton 
+  size="small" 
+  sx={{ 
+    ml: 0.1, 
+  
+  }}
+>
+  <Typography
+    variant="body2"
+    sx={{ fontFamily: "Arial", fontWeight: "bold" }}
+  >
+    ع
+  </Typography>
+</IconButton>
         </Tooltip>
       </Box>
       <Box sx={{ mt: 2 }}>{children}</Box>
