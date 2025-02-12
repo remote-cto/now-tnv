@@ -1,41 +1,3 @@
-// import React from "react";
-
-// const Contact: React.FC = () => {
-//   return (
-//     <div className="bg-black flex flex-col items-center justify-center text-white py-12 px-4 mb-4 font-['helveticanowtext-black-demo']">
-//       <div className="max-w-3xl w-full text-center space-y-8">
-//         <h1 className="text-3xl lg:text-6xl font-extrabold mb-6 font-['helveticanowtext-black-demo'] ">
-//           Need Help?
-//         </h1>
-
-//         <div className="space-y-4 text-left">
-//           <p className="text-lg lg:text-2xl leading-tight font-['helveticanowtext-black-demo']">
-//             We understand that buying or selling a digital business isn't easy.
-//           </p>
-//           <p className="text-xl lg:text-2xl font-['helveticanowtext-black-demo']">
-//             If you have any questions or require assistance, feel free to
-//             contact us anytime.
-//           </p>
-//         </div>
-
-//         <div className="space-y-4 mt-12 text-left">
-//           <p className="text-lg lg:text-2xl font-['helveticanowtext-black-demo']">
-//             email :{" "}
-//             <a
-//               href="mailto:hello@nowvaluation.com"
-//               className="text-white hover:text-gray-300 underline"
-//             >
-//               hello@nowvaluation.com
-//             </a>
-//           </p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Contact;
-
 "use client";
 import React, { useCallback, useMemo, useEffect } from "react";
 import {
@@ -55,10 +17,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import Header from "../components/Header";
-import NowValuationTool from "../components/NowValuationTool";
-import ValuationQuestionAnswer from "../components/ValuationQuestionAnswer";
-import ValuationPageFooter from "../components/ValuationPageFooter";
+import { useMediaQuery, Theme } from "@mui/material";
+
+
 import SubmitButton from "../components/SubmitButton";
 
 const theme = createTheme({
@@ -150,40 +111,84 @@ interface QuestionCardProps {
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = React.memo(
-  ({ number, question, explanation, arabicExplanation, children }) => (
-    <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Typography variant="h6" sx={{ mr: 1 }}>
-          {number}. {question}
-        </Typography>
-        <Tooltip title={explanation} placement="right" arrow>
-          <IconButton size="small">
-            <HelpOutlineIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        {/* Additional Tooltip for Arabic explanation */}
-        <Tooltip title={arabicExplanation} placement="right" arrow>
-        <IconButton 
-  size="small" 
-  sx={{ 
-    ml: 0.1, 
-  
-  }}
->
-  <Typography
-    variant="body2"
-    sx={{ fontFamily: "Arial", fontWeight: "bold" }}
-  >
-    ع
-  </Typography>
-</IconButton>
-        </Tooltip>
-      </Box>
-      <Box sx={{ mt: 2 }}>{children}</Box>
-    </Paper>
-  )
-);
+  ({ number, question, explanation, arabicExplanation, children }) => {
+    // Detect screen size
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+      theme.breakpoints.down("sm")
+    );
 
+    return (
+      <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Typography variant="h6" sx={{ mr: 1 }}>
+            {number}. {question}
+          </Typography>
+          {/* Tooltip for English explanation */}
+          <Tooltip
+            title={
+              <Typography
+                sx={{
+                  fontSize: { xs: "0.75rem", sm: "0.875rem" }, // Responsive font size
+                }}
+              >
+                {explanation}
+              </Typography>
+            }
+            placement={isSmallScreen ? "bottom" : "right"} // Responsive placement
+            arrow
+          >
+            <IconButton
+              size="small"
+              sx={{
+                width: 24,
+              }}
+            >
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          {/* Tooltip for Arabic explanation */}
+          <Tooltip
+            title={
+              <Typography
+                sx={{
+                  fontSize: { xs: "0.75rem", sm: "0.875rem" }, // Responsive font size
+                }}
+              >
+                {arabicExplanation}
+              </Typography>
+            }
+            placement={isSmallScreen ? "bottom" : "right"} // Responsive placement
+            arrow
+          >
+            <IconButton
+              size="small"
+              sx={{
+                ml: 0.1,
+                width: { xs: 16, sm: 18 }, // Responsive width
+                height: { xs: 16, sm: 18 }, // Responsive height
+                borderRadius: "50%",
+                border: "2px solid",
+                borderColor: "gray",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  fontSize: { xs: "0.75rem", sm: "0.845rem" }, // Responsive font size
+                }}
+              >
+                ع
+              </Typography>
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box sx={{ mt: 2 }}>{children}</Box>
+      </Paper>
+    );
+  }
+);
 const Contact: React.FC = () => {
   const initialFormData: FormData = {
     companyName: "",
@@ -430,7 +435,8 @@ const Contact: React.FC = () => {
                   question: "What is your business's annual revenue?",
                   explanation:
                     "This is your business's total income before expenses. If you're unsure, use your best estimate.",
-                  arabicExplanation:"هذا إجمالي دخل نشاطك التجاري قبل المصاريف. إذا مو متأكد، استخدم أفضل تقدير عندك.",
+                  arabicExplanation:
+                    "هذا إجمالي دخل نشاطك التجاري قبل المصاريف. إذا مو متأكد، استخدم أفضل تقدير عندك.",
                   field: "revenue",
                   type: "number",
                   label: "Annual Revenue",
@@ -440,33 +446,43 @@ const Contact: React.FC = () => {
                   question: "What is your annual net income or profit?",
                   explanation:
                     "This is how much your business earned after expenses. If you're unsure, a typical business keeps 10–15% of revenue as profit.",
-                    arabicExplanation:"هذا الربح الصافي لنشاطك التجاري بعد المصاريف. إذا مو متأكد، عادةً الشركات تحتفظ بـ 10-15% من الإيرادات كربح.",
+                  arabicExplanation:
+                    "هذا الربح الصافي لنشاطك التجاري بعد المصاريف. إذا مو متأكد، عادةً الشركات تحتفظ بـ 10-15% من الإيرادات كربح.",
 
                   field: "netIncome",
                   type: "number",
                   label: "Annual Net Income",
                 },
-              ].map(({ number, question, explanation,arabicExplanation, field, label }) => (
-                <QuestionCard
-                  key={number}
-                  number={number}
-                  question={question}
-                  explanation={explanation}
-                  arabicExplanation= {arabicExplanation}
-                >
-                  <TextField
-                    fullWidth
-                    type="text"
-                    inputMode="decimal"
-                    label={label}
-                    value={formState.data[field as keyof FormData]}
-                    onChange={handleNumericInput(field as keyof FormData)}
-                    inputProps={{
-                      pattern: "\\d*\\.?\\d*",
-                    }}
-                  />
-                </QuestionCard>
-              ))}
+              ].map(
+                ({
+                  number,
+                  question,
+                  explanation,
+                  arabicExplanation,
+                  field,
+                  label,
+                }) => (
+                  <QuestionCard
+                    key={number}
+                    number={number}
+                    question={question}
+                    explanation={explanation}
+                    arabicExplanation={arabicExplanation}
+                  >
+                    <TextField
+                      fullWidth
+                      type="text"
+                      inputMode="decimal"
+                      label={label}
+                      value={formState.data[field as keyof FormData]}
+                      onChange={handleNumericInput(field as keyof FormData)}
+                      inputProps={{
+                        pattern: "\\d*\\.?\\d*",
+                      }}
+                    />
+                  </QuestionCard>
+                )
+              )}
 
               <QuestionCard
                 number={3}
@@ -496,7 +512,8 @@ const Contact: React.FC = () => {
                   question: "What is the total value of your business assets?",
                   explanation:
                     "Include physical items like inventory, equipment, or property. If you're unsure, leave it blank.",
-                    arabicExplanation:"يشمل أصول مادية مثل المخزون، المعدات، النقد أو العقارات. إذا مو متأكد، خله فاضي.",
+                  arabicExplanation:
+                    "يشمل أصول مادية مثل المخزون، المعدات، النقد أو العقارات. إذا مو متأكد، خله فاضي.",
 
                   field: "assets",
                   label: "Total Assets Value",
@@ -506,32 +523,42 @@ const Contact: React.FC = () => {
                   question: "What are your total liabilities?",
                   explanation:
                     "This includes any loans or debts your business owes. If you're unsure, leave it blank.",
-                    arabicExplanation:"يشمل أي قروض أو ديون على نشاطك التجاري. إذا مو متأكد، خله فاضي.",
+                  arabicExplanation:
+                    "يشمل أي قروض أو ديون على نشاطك التجاري. إذا مو متأكد، خله فاضي.",
 
                   field: "liabilities",
                   label: "Total Liabilities",
                 },
-              ].map(({ number, question, explanation,arabicExplanation, field, label }) => (
-                <QuestionCard
-                  key={number}
-                  number={number}
-                  question={question}
-                  explanation={explanation}
-                  arabicExplanation= {arabicExplanation}
-                >
-                  <TextField
-                    fullWidth
-                    type="text"
-                    inputMode="decimal"
-                    label={label}
-                    value={formState.data[field as keyof FormData]}
-                    onChange={handleNumericInput(field as keyof FormData)}
-                    inputProps={{
-                      pattern: "\\d*\\.?\\d*",
-                    }}
-                  />
-                </QuestionCard>
-              ))}
+              ].map(
+                ({
+                  number,
+                  question,
+                  explanation,
+                  arabicExplanation,
+                  field,
+                  label,
+                }) => (
+                  <QuestionCard
+                    key={number}
+                    number={number}
+                    question={question}
+                    explanation={explanation}
+                    arabicExplanation={arabicExplanation}
+                  >
+                    <TextField
+                      fullWidth
+                      type="text"
+                      inputMode="decimal"
+                      label={label}
+                      value={formState.data[field as keyof FormData]}
+                      onChange={handleNumericInput(field as keyof FormData)}
+                      inputProps={{
+                        pattern: "\\d*\\.?\\d*",
+                      }}
+                    />
+                  </QuestionCard>
+                )
+              )}
 
               <QuestionCard
                 number={6}
@@ -556,45 +583,6 @@ const Contact: React.FC = () => {
                   </Select>
                 </FormControl>
               </QuestionCard>
-
-              {/* <QuestionCard
-              number={7}
-              question="How many customers did you serve last month?"
-              explanation="If you don't track this, estimate the number of individual customers or orders you handled in the last month."
-            >
-              <TextField
-                fullWidth
-                type="text"
-                inputMode="numeric"
-                label="Monthly Customers"
-                value={formState.data.monthlyCustomers}
-                onChange={handleNumericInput("monthlyCustomers")}
-                inputProps={{
-                  pattern: "\\d*",
-                }}
-              />
-            </QuestionCard> */}
-
-              {/* <QuestionCard
-              number={8}
-              question="How many employees do you have?"
-              explanation="Include all part-time and full-time employees. If you're a solo business, select 'None'."
-            >
-              <FormControl fullWidth>
-                <InputLabel>Number of Employees</InputLabel>
-                <Select
-                  value={formState.data.employees}
-                  label="Number of Employees"
-                  onChange={(e) => handleTextFieldChange("employees")(e)}
-                >
-                  {staticData.employeeOptions.map((option) => (
-                    <MenuItem key={option} value={option.toLowerCase()}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </QuestionCard> */}
 
               <QuestionCard
                 number={7}
@@ -648,17 +636,6 @@ const Contact: React.FC = () => {
                   {formState.error}
                 </Alert>
               )}
-
-              {/* {formState.result && (
-            <Paper sx={{ mt: 2, p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Valuation Result
-              </Typography>
-              <Typography sx={{ whiteSpace: "pre-wrap" }}>
-                {formState.result}
-              </Typography>
-            </Paper>
-          )} */}
             </Box>
           </div>
         </ThemeProvider>
