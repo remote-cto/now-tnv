@@ -140,10 +140,12 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
             <IconButton
               size="small"
               sx={{
-                width: 24,
+                width: { xs: 32, sm: 36 }, // Larger width
+                height: { xs: 32, sm: 36 }, // Larger height
+                p: 1, // Add padding to ensure spacing
               }}
             >
-              <HelpOutlineIcon fontSize="small" />
+              <HelpOutlineIcon fontSize="medium" /> {/* Larger icon size */}
             </IconButton>
           </Tooltip>
           {/* Tooltip for Arabic explanation */}
@@ -151,7 +153,7 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
             title={
               <Typography
                 sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" }, // Responsive font size
+                  fontSize: { xs: "0.65rem", sm: "0.875rem" }, // Responsive font size
                 }}
               >
                 {arabicExplanation}
@@ -164,11 +166,12 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
               size="small"
               sx={{
                 ml: 0.1,
-                width: { xs: 16, sm: 18 }, // Responsive width
-                height: { xs: 16, sm: 18 }, // Responsive height
+                width: { xs: 20, sm: 22 }, // Slightly increase width
+                height: { xs: 20, sm: 22 }, // Slightly increase height
                 borderRadius: "50%",
                 border: "2px solid",
                 borderColor: "gray",
+                p: 0.5, // Add padding to ensure spacing
               }}
             >
               <Typography
