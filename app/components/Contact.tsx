@@ -145,11 +145,12 @@ interface QuestionCardProps {
   number: number | string;
   question: string;
   explanation: string;
+  arabicExplanation: string;
   children: React.ReactNode;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = React.memo(
-  ({ number, question, explanation, children }) => (
+  ({ number, question, explanation, arabicExplanation, children }) => (
     <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <Typography variant="h6" sx={{ mr: 1 }}>
@@ -158,6 +159,17 @@ const QuestionCard: React.FC<QuestionCardProps> = React.memo(
         <Tooltip title={explanation} placement="right" arrow>
           <IconButton size="small">
             <HelpOutlineIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        {/* Additional Tooltip for Arabic explanation */}
+        <Tooltip title={arabicExplanation} placement="right" arrow>
+          <IconButton size="small" sx={{ ml: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "Arial", fontWeight: "bold" }}
+            >
+              ع
+            </Typography>
           </IconButton>
         </Tooltip>
       </Box>
@@ -350,15 +362,15 @@ const Contact: React.FC = () => {
       <section id="contact-section" className="...">
         <ThemeProvider theme={theme}>
           <div className="bg-black font-['helveticanowtext-black-demo']">
-            
             <Box sx={{ maxWidth: 1000, mx: "auto", p: 3 }}>
-            <div className="text-lg md:text-4xl text-white text-center mt-6 animate-fade-in font-['helveticanowtext-black-demo'] mb-2 lg:mb-6 underline">
-              START WITH SOME KEY DETAILS
-            </div>
+              <div className="text-lg md:text-4xl text-white text-center mt-6 animate-fade-in font-['helveticanowtext-black-demo'] mb-2 lg:mb-6 underline">
+                START WITH SOME KEY DETAILS
+              </div>
               <QuestionCard
                 number="*"
                 question="Basic Information"
                 explanation="We'll use this to send you your valuation report"
+                arabicExplanation="بنستخدم هذا عشان نرسل لك تقرير التقييم"
               >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <TextField
@@ -412,6 +424,7 @@ const Contact: React.FC = () => {
                   question: "What is your business's annual revenue?",
                   explanation:
                     "This is your business's total income before expenses. If you're unsure, use your best estimate.",
+                  arabicExplanation:"هذا إجمالي دخل نشاطك التجاري قبل المصاريف. إذا مو متأكد، استخدم أفضل تقدير عندك.",
                   field: "revenue",
                   type: "number",
                   label: "Annual Revenue",
@@ -421,16 +434,19 @@ const Contact: React.FC = () => {
                   question: "What is your annual net income or profit?",
                   explanation:
                     "This is how much your business earned after expenses. If you're unsure, a typical business keeps 10–15% of revenue as profit.",
+                    arabicExplanation:"هذا الربح الصافي لنشاطك التجاري بعد المصاريف. إذا مو متأكد، عادةً الشركات تحتفظ بـ 10-15% من الإيرادات كربح.",
+
                   field: "netIncome",
                   type: "number",
                   label: "Annual Net Income",
                 },
-              ].map(({ number, question, explanation, field, label }) => (
+              ].map(({ number, question, explanation,arabicExplanation, field, label }) => (
                 <QuestionCard
                   key={number}
                   number={number}
                   question={question}
                   explanation={explanation}
+                  arabicExplanation= {arabicExplanation}
                 >
                   <TextField
                     fullWidth
@@ -450,6 +466,7 @@ const Contact: React.FC = () => {
                 number={3}
                 question="What industry does your business operate in?"
                 explanation="Choose the category that best describes your business. This helps us apply an appropriate valuation multiple based on typical industry performance."
+                arabicExplanation="اختَر الفئة اللي توصف نشاطك التجاري بأفضل شكل. هذا يساعدنا ان نستخدم معامل التقييم المناسب بناءً على أداء القطاع المعتاد."
               >
                 <FormControl fullWidth>
                   <InputLabel>Select Industry</InputLabel>
@@ -473,6 +490,8 @@ const Contact: React.FC = () => {
                   question: "What is the total value of your business assets?",
                   explanation:
                     "Include physical items like inventory, equipment, or property. If you're unsure, leave it blank.",
+                    arabicExplanation:"يشمل أصول مادية مثل المخزون، المعدات، النقد أو العقارات. إذا مو متأكد، خله فاضي.",
+
                   field: "assets",
                   label: "Total Assets Value",
                 },
@@ -481,15 +500,18 @@ const Contact: React.FC = () => {
                   question: "What are your total liabilities?",
                   explanation:
                     "This includes any loans or debts your business owes. If you're unsure, leave it blank.",
+                    arabicExplanation:"يشمل أي قروض أو ديون على نشاطك التجاري. إذا مو متأكد، خله فاضي.",
+
                   field: "liabilities",
                   label: "Total Liabilities",
                 },
-              ].map(({ number, question, explanation, field, label }) => (
+              ].map(({ number, question, explanation,arabicExplanation, field, label }) => (
                 <QuestionCard
                   key={number}
                   number={number}
                   question={question}
                   explanation={explanation}
+                  arabicExplanation= {arabicExplanation}
                 >
                   <TextField
                     fullWidth
@@ -509,6 +531,7 @@ const Contact: React.FC = () => {
                 number={6}
                 question="How many years has your business been in operation?"
                 explanation="This helps us estimate business stability. Older businesses are generally more valuable."
+                arabicExplanation="هذا يساعدنا ان نقدر استقرار النشاط التجاري. الشركات الأقدم تكون عادةً أكثر قيمة."
               >
                 <FormControl fullWidth>
                   <InputLabel>Years in Operation</InputLabel>
@@ -571,6 +594,7 @@ const Contact: React.FC = () => {
                 number={7}
                 question="How many followers do you have on your most active social media account?"
                 explanation="Enter the number of followers on the platform where your business is most active, like Instagram, Twitter, or LinkedIn."
+                arabicExplanation="ادخل عدد المتابعين على المنصة اللي نشاطك التجاري أكثر نشاط فيها، مثل إنستغرام، تيك توك، أو سناب شات."
               >
                 <TextField
                   fullWidth
@@ -589,6 +613,7 @@ const Contact: React.FC = () => {
                 number={8}
                 question="Is your revenue growing, stable, or declining?"
                 explanation="Pick the trend that best describes your revenue over the last 12 months."
+                arabicExplanation="اختر الخيار اللي يوصف إيراداتك خلال آخر 12 شهر أو أكثر بأفضل شكل."
               >
                 <FormControl fullWidth>
                   <InputLabel>Revenue Trend</InputLabel>
